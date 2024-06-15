@@ -7,10 +7,10 @@ using UnityEngine.InputSystem.LowLevel;
 
 public abstract class BaseState
 {
-    public virtual void Enter() { return; }
-    public virtual void Update() { return; }
-    public virtual void Exit() { return; }
-    public virtual void PhysicsUpdate() { return; }
+    public virtual void Enter(Piece piece) { return; }
+    public virtual void Update(Piece piece) { return; }
+    public virtual void Exit(Piece piece) { return; }
+    public virtual void PhysicsUpdate(Piece piece) { return; }
 }
 
 // https://stackoverflow.com/questions/16745629/how-to-abstract-a-singleton-class

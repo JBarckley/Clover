@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public struct FrogState
@@ -10,28 +11,27 @@ public struct FrogState
 
 public class FrogIdle : State<FrogIdle>
 {
-    TimerInstance IdleDelay;
-
-    StateMachine sm = StateMachine.Get();
-
-    public override void Enter()
+    public override void Enter(Piece piece)
     {
-        IdleDelay = new TimerInstance(0.5f);
+        piece.m_SM.Timer += 1.5f;
     }
 
-    public override void Update()
+    public override void Update(Piece piece)
     {
-        if (!IdleDelay)
+        StateMachine sm = piece.m_SM;
+        if (!sm.Timer)
         {
-            sm.ToState(FrogState.Jump);
+            Debug.Log("to jump");
+            sm.ToState(piece, FrogState.Jump);
         }
     }
 }
 
 public class FrogJump : State<FrogJump>
 {
-    public override void Update()
+    public override void Update(Piece piece)
     {
-        // do jump
+        BattleBoard.Move(piece, Random.insideUnitCircle);
+        piece.m_SM.ToState(piece, FrogState.Idle);
     }
 }

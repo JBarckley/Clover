@@ -12,17 +12,14 @@ public class FrogPiece : Piece
 
     public override GameObject Spawn(Vector2 pos, string name = "")
     {
-        m_Instance = base.Spawn(pos, "Frog");
-        return m_Instance;
+        Instance = base.Spawn(pos, "Frog");
+        m_SM = new StateMachine(FrogState.Idle);
+        return Instance;
     }
 
     public override void Action()
     {
-        TimerInstance MoveDelay = new TimerInstance(3.5f);
-        if (!MoveDelay)
-        {
-            // move
-        }
+        
     }
 
     public override void Remove()

@@ -30,11 +30,19 @@ public abstract class Piece
         return ((PieceName)m_ID).ToString();
     }
 
-    public bool isWaiting { get; set; }
-
     protected byte m_ID;
 
-    protected GameObject m_Instance;
+    public GameObject Instance { get; protected set; }
+
+    public StateMachine m_SM = null;
+
+    public PieceName Name 
+    { 
+        get
+        {
+            return (PieceName)m_ID;
+        }
+    }
 }
 
 public enum PieceName

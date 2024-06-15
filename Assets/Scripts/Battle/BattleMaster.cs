@@ -13,16 +13,11 @@ public class BattleMaster : MonoBehaviour
 
     public GameBoard Board;
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         if (GamePhase.Current == Phase.Battle)
         {
-            BattleControl.Battle(Board);
+            BattleControl.Update(Board);
         }
     }
 
@@ -70,6 +65,7 @@ public class BattleMaster : MonoBehaviour
         {
             Debug.Log("Starting Battle!");
             GamePhase.Current = Phase.Battle;
+            BattleBoard.Create(Board);
         }
     }
 }

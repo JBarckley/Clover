@@ -27,8 +27,10 @@ public static class BattleControl
         }
     }
 
-    public static void Battle(GameBoard board)
+    public static void Update(GameBoard board)
     {
-        Debug.Log("BATTLE!");
+        //Debug.Log("BATTLE!");
+
+        board.Update();
     }
 }

@@ -5,24 +5,28 @@ using UnityEngine;
 using UnityEngine.Experimental.AI;
 using Object = UnityEngine.Object;
 
-public struct TimerInstance
+public class TimerInstance
 {
     public bool isWaiting;
     public float time;
 
     //private static readonly Timer timer = Timer.Get();
 
-    public TimerInstance(float seconds)
+    public TimerInstance(float seconds = 0)
     {
-        time = Time.time + seconds;
-        isWaiting = false;
+        if (seconds == 0)
+        {
+            time = 0;
+            isWaiting = false;
+        }
+        else
+        {
+            time = Time.time + seconds;
+            Debug.Log(time);
+            isWaiting = true;
 
-        Timer.Wait(this);
-    }
-
-    public void setWaiting(bool waiting)
-    {
-        isWaiting = waiting;
+            Timer.Wait(this);
+        }
     }
 
     public static bool operator true(TimerInstance inst)
@@ -43,36 +47,10 @@ public struct TimerInstance
     public static TimerInstance operator +(TimerInstance inst, float b) 
     {
         inst.time = Time.time + b;
+        inst.isWaiting = true;
         Timer.Wait(inst);
         return inst;
     }
-
-    /*
-    private class Timer
-    {
-        private static readonly GameObject go;
-        private static readonly Clock clock;
-
-        static readonly Timer _instance = new Timer();
-        public static Timer Instance { get { return _instance; } }
-
-        static Timer()
-        {
-            go = (GameObject)Object.Instantiate(Resources.Load("Utility/Clock"));
-            clock = go.AddComponent<Clock>();
-        }
-
-        public static Timer Get()
-        {
-            return Instance;
-        }
-
-        public void Wait(TimerInstance inst)
-        {
-            clock.Wait(inst);
-        }
-    }
-    */
 
     private static class Timer
     {

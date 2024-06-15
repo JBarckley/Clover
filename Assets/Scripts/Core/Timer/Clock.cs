@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Clock : MonoBehaviour
 {
-    private List<TimerInstance> objectsWaiting;
+    private List<TimerInstance> objectsWaiting = new List<TimerInstance>();
+    private List<TimerInstance> toRemove = new List<TimerInstance>();
 
     void Update()
     {
@@ -13,10 +14,17 @@ public class Clock : MonoBehaviour
         {
             if (Time.time > inst.time)
             {
-                inst.setWaiting(false);
-                objectsWaiting.Remove(inst);
+                inst.isWaiting = false;
+                toRemove.Add(inst);
             }
         }
+
+        foreach (TimerInstance inst in toRemove)
+        {
+            objectsWaiting.Remove(inst);
+        }
+
+        toRemove.Clear();
     }
 
     public void Wait(TimerInstance inst)

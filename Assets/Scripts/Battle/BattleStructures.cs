@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
+// board structure used in construction of the pre-battle phase board
 public struct GameBoard
 {
     public GameBoard(PieceLayout PlayerPieces)
@@ -25,6 +28,21 @@ public struct GameBoard
             {
                 //Debug.Log(m_Board[i, k] + " " + PlayerPieces[i, k]);
                 m_Board[i, k] = PlayerPieces[i, k];
+            }
+        }
+    }
+
+    public void Update()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int k = 0; k < 8; k++)
+            {
+                if (m_Board[i, k].m_SM != null)
+                {
+                    StateMachine sm = m_Board[i, k].m_SM;
+                    sm.Current.Update(m_Board[i, k]);
+                }
             }
         }
     }
@@ -119,4 +137,57 @@ public struct PieceLayout
     }
 
     private Piece[,] m_PieceLayout;
+}
+
+// board used and dynamically updated with the flow of battle
+public static class BattleBoard
+{
+    private static Dictionary<Piece, Vector3> Board = new Dictionary<Piece, Vector3>();
+
+    public static void Create(GameBoard GameBoard)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int k = 0; k < 8; k++)
+            {
+                Piece piece = GameBoard[i, k];
+                if (piece.Name != PieceName.None)
+                {
+                    Board.Add(GameBoard[i, k], GameBoard[i, k].Instance.transform.position);
+                }
+            }
+        }
+    }
+
+    public static Piece Find(Piece piece)
+    {
+        return piece; // not yet implemented
+    }
+
+    public static void Move(Piece piece, Vector2 move)
+    {
+        Debug.Log("here2" + (piece.Instance.transform.position + (Vector3)move));
+        if ((piece.Instance.transform.position + (Vector3)move).WithinBoardBoundary())
+        {
+            Debug.Log("here3");
+            piece.Instance.transform.position += (Vector3)move;
+            Board[piece] = piece.Instance.transform.position;
+        }
+    }
+}
+
+public struct Boundary
+{
+    public static float Top = 5.6f;
+    public static float Bottom = -Top;
+    public static float Right = -25f + Top;
+    public static float Left = -25f + Bottom;
+}
+
+public static class VectorExtension
+{
+    public static bool WithinBoardBoundary(this Vector3 vec)
+    {
+        return vec.x < Boundary.Right && vec.x > Boundary.Left && vec.y > Boundary.Bottom && vec.y < Boundary.Top;
+    }
 }

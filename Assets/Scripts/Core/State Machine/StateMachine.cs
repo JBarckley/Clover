@@ -5,24 +5,19 @@ using UnityEngine;
 
 public class StateMachine
 {
-    private static StateMachine _instance = new StateMachine();
-    public static StateMachine Instance { get { return _instance; } }
-    public static StateMachine Get() 
-    { 
-        return Instance; 
+    public BaseState Current;
+    public TimerInstance Timer = new TimerInstance();
+
+    public StateMachine(BaseState initState)
+    {
+        Debug.Log("new SM");
+        Current = initState;
     }
 
-    public BaseState State;
-
-    public void Init(BaseState initState)
+    public void ToState(Piece piece, BaseState nextState)
     {
-        State = initState;
-    }
-
-    public void ToState(BaseState nextState)
-    {
-        State.Exit();
-        State = nextState;
-        nextState.Enter();
+        Current.Exit(piece);
+        Current = nextState;
+        nextState.Enter(piece);
     }
 }
