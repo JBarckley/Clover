@@ -1,4 +1,4 @@
-# Codename Clover
+# Clover
  Prototyping an adventure-based rpg with auto chess elements
 
 The starting point for this idea is this:
