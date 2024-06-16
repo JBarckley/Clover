@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -18,7 +19,9 @@ public abstract class Piece
     public virtual GameObject Spawn(Vector2 pos, string name = "")
     {
         if (name == "None") return null; // None pieces are stored as a default circle sprite for debug purposes, but this line removes them completely.
-        return (GameObject)Object.Instantiate(Resources.Load("Pieces/" + name, typeof(GameObject)), pos, Quaternion.identity);
+        Instance = (GameObject)Object.Instantiate(Resources.Load("Pieces/" + name, typeof(GameObject)), pos, Quaternion.identity);
+        Position = Instance.transform.position;
+        return Instance;
     }
 
     public abstract void Action();
@@ -29,6 +32,8 @@ public abstract class Piece
     {
         return ((PieceName)m_ID).ToString();
     }
+
+    public static implicit operator Vector3(Piece p) => p.Position;
 
     protected byte m_ID;
 

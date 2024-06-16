@@ -7,7 +7,7 @@ using UnityEngine;
 // board structure used in construction of the pre-battle phase board
 public struct GameBoard
 {
-    public GameBoard(PieceLayout PlayerPieces)
+    public GameBoard(PieceLayout PlayerPieces, PieceLayout OpponentPieces)
     {
         m_Board = new Piece[8, 8];
         for (int i = 0; i < 8; i++)
@@ -18,6 +18,7 @@ public struct GameBoard
             }
         }
         PopulateFromPlayer(PlayerPieces);
+        PopulateFromOpponent(OpponentPieces);
     }
 
     public void PopulateFromPlayer(PieceLayout PlayerPieces)
@@ -26,14 +27,25 @@ public struct GameBoard
         {
             for (int k = 0; k < Mathf.Min(PlayerPieces.GetLength(1), 8); k++)
             {
-                //Debug.Log(m_Board[i, k] + " " + PlayerPieces[i, k]);
                 m_Board[i, k] = PlayerPieces[i, k];
+            }
+        }
+    }
+
+    public void PopulateFromOpponent(PieceLayout OpponentPieces)
+    {
+        for (int i = 0; i < Mathf.Min(OpponentPieces.GetLength(0), 2); i++)
+        {
+            for (int k = 0; k < Mathf.Min(OpponentPieces.GetLength(1), 8); k++)
+            {
+                m_Board[7 - i, k] = OpponentPieces[i, k];
             }
         }
     }
 
     public void Update()
     {
+        BattleBoard.BoardUtility.FindKNN(1);
         for (int i = 0; i < 8; i++)
         {
             for (int k = 0; k < 8; k++)

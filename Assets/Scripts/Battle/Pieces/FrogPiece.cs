@@ -12,9 +12,8 @@ public class FrogPiece : Piece
 
     public override GameObject Spawn(Vector2 pos, string name = "")
     {
-        Instance = base.Spawn(pos, "Frog");
         m_SM = new StateMachine(FrogState.Idle);
-        return Instance;
+        return base.Spawn(pos, "Frog");
     }
 
     public override void Action()

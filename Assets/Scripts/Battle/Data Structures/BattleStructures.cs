@@ -2,6 +2,9 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Xml.Resolvers;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // board dynamically updated with the flow of battle
@@ -43,8 +46,16 @@ public static class BattleBoard
     /*
      *      Accidentally deleted my explanation, but tldr is I spent a hour-ish researching k-d trees, quadtrees, octotrees,
      *      R-trees pretty much any spacially ordered trees trying to figure out the most efficient data structure but I
-     *      realized the size of my data set meant that brute force would either be the quickest or a very competitive
-     *      strategy for a k nearest neighbors search
+     *      realized the size of my data set meant that brute force would be a very competitive strategy for nearest neighbor search.
+     *      
+     *      With a point quadtree, I could get O(nlogn) which is significantly faster than a O(n^2) brute force approach of course, but, like,
+     *      I will likely have a maximum of 40 units this is called on, which means the performance difference is < 1ms per frame, something
+     *      I can live with.
+     *      For instance, a brute force approach with 24 pieces searching for k = 8 nearest neighbors took ~0.5ms per frame.
+     *      
+     *      A brute force implementation is significantly less time consuming to implement and not having to use a package allows for much
+     *      more convinient specialization of the structure.
+     *      
      */
 
     public static class BoardUtility
@@ -56,22 +67,14 @@ public static class BattleBoard
             return true;
         }
 
-        /*
-        public static List<Piece> FindKNN2(int k, Piece piece)
-        {
-            NearestNeighborComparer nnkComparer = new NearestNeighborComparer();
-            nnkComparer.CompareTo(piece);
-            Board.Sort(nnkComparer);
-            return Board.GetRange(0, k);
-        }
-        */
-
         public static void FindKNN(int k)
         {
+            NearestNeighbors.Clear();
             List<Piece> nn = new List<Piece>();
             if (k > Board.Count + 1) throw new IndexOutOfRangeException("Attempted to find more nearest neighbors than pieces exist");
             foreach (Piece a in Board)
             {
+                Piece FurthestNearNeighbor = null;
                 foreach (Piece b in Board)
                 {
                     if (a == b) continue;
@@ -80,10 +83,24 @@ public static class BattleBoard
                         nn.Add(b);
                         continue;
                     }
-                    if ((b.Position - a.Position).magnitude < (nn[k - 1].Position - a.Position).magnitude)
+                    if (FurthestNearNeighbor == null)
                     {
-                        nn.RemoveAt(k - 1);
+                        float distance = 0;
+                        foreach (Piece p in nn)
+                        {
+                            float new_distance = Vector3.Distance(p, a);
+                            if (new_distance > distance)
+                            {
+                                distance = new_distance;
+                                FurthestNearNeighbor = p;
+                            }
+                        }
+                    }
+                    if (Vector3.Distance(a, b) < Vector3.Distance(a, FurthestNearNeighbor))
+                    {
+                        nn.Remove(FurthestNearNeighbor);
                         nn.Add(b);
+                        FurthestNearNeighbor = null;
                     }
                 }
                 NearestNeighbors.Add(a, nn);
@@ -92,26 +109,3 @@ public static class BattleBoard
         }
     }
 }
-
-/*
-public class NearestNeighborComparer : IComparer<Piece>
-{
-    private Piece comparator;
-
-    public int Compare(Piece x, Piece y)
-    {
-        if (comparator == null)
-        {
-            throw new ArgumentNullException("no comparison piece set in nearest neighbor search");
-        }
-
-        Vector3 comparedPos = comparator.Position;
-        return (x.Position - comparedPos).magnitude.CompareTo((y.Position - comparedPos).magnitude);
-    }
-
-    public void CompareTo(Piece piece)
-    {
-        comparator = piece;
-    }
-}
-*/

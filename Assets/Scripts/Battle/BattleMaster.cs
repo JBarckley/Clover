@@ -48,13 +48,22 @@ public class BattleMaster : MonoBehaviour
         cam = FindObjectOfType<Camera>();
     }
 
+    private static PieceLayout MinimalPlayer = new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, PieceName.Frog, PieceName.Frog, PieceName.None, PieceName.None, PieceName.None},
+                                                                                 { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
+    private static PieceLayout MinimalOpponent = new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.Crate, PieceName.None, PieceName.None, PieceName.None},
+                                                                                   { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
+    private static PieceLayout MaximalPlayer = new PieceLayout(new PieceName[,] {{ PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog},
+                                                                                 { PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog}});
+    private static PieceLayout MaximalOpponent = new PieceLayout(new PieceName[,] {{ PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate},
+                                                                                   { PieceName.None, PieceName.None, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.None, PieceName.None}});
+
     public void SetupBattle()
     {
         cam.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
         boardInstance = (GameObject) Instantiate(Resources.Load("World/Board"), transform.position, Quaternion.identity);
-        PieceLayout PlayerPieces = new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, PieceName.Frog, PieceName.Frog, PieceName.None, PieceName.None, PieceName.None},
-                                                                     { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
-        Board = new GameBoard(PlayerPieces);
+        PieceLayout PlayerPieces = MaximalPlayer;
+        PieceLayout OpponentPieces = MaximalOpponent;
+        Board = new GameBoard(PlayerPieces, OpponentPieces);
         BattleControl.SpawnPieces(Board, boardInstance.transform.position);
         Board.Print();
     }

@@ -11,8 +11,7 @@ public class NonePiece : Piece
 
     public override GameObject Spawn(Vector2 pos, string name = "")
     {
-        Instance = base.Spawn(pos, "None");
-        return Instance;
+        return base.Spawn(pos, "None");
     }
 
     public override void Action()
