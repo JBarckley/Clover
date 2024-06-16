@@ -31,7 +31,7 @@ public class FrogJump : State<FrogJump>
 {
     public override void Update(Piece piece)
     {
-        BattleBoard.Move(piece, Random.insideUnitCircle);
+        BattleBoard.Teleport(piece, Random.insideUnitCircle);
         piece.m_SM.ToState(piece, FrogState.Idle);
     }
 }

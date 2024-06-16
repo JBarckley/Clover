@@ -139,43 +139,6 @@ public struct PieceLayout
     private Piece[,] m_PieceLayout;
 }
 
-// board used and dynamically updated with the flow of battle
-public static class BattleBoard
-{
-    private static Dictionary<Piece, Vector3> Board = new Dictionary<Piece, Vector3>();
-
-    public static void Create(GameBoard GameBoard)
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            for (int k = 0; k < 8; k++)
-            {
-                Piece piece = GameBoard[i, k];
-                if (piece.Name != PieceName.None)
-                {
-                    Board.Add(GameBoard[i, k], GameBoard[i, k].Instance.transform.position);
-                }
-            }
-        }
-    }
-
-    public static Piece Find(Piece piece)
-    {
-        return piece; // not yet implemented
-    }
-
-    public static void Move(Piece piece, Vector2 move)
-    {
-        Debug.Log("here2" + (piece.Instance.transform.position + (Vector3)move));
-        if ((piece.Instance.transform.position + (Vector3)move).WithinBoardBoundary())
-        {
-            Debug.Log("here3");
-            piece.Instance.transform.position += (Vector3)move;
-            Board[piece] = piece.Instance.transform.position;
-        }
-    }
-}
-
 public struct Boundary
 {
     public static float Top = 5.6f;

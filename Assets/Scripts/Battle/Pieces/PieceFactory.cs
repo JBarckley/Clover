@@ -11,6 +11,7 @@ public static class PieceFactory
         {
             case PieceName.None: return new NonePiece();
             case PieceName.Frog: return new FrogPiece();
+            case PieceName.Crate: return new CratePiece();
             default: return new NonePiece();
         }
     }

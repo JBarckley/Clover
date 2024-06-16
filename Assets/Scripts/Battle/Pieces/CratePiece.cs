@@ -2,18 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FrogPiece : Piece
+public class CratePiece : Piece
 {
-
-    public FrogPiece()
+    public CratePiece()
     {
-        m_ID = 1;
+        m_ID = 2;
     }
 
     public override GameObject Spawn(Vector2 pos, string name = "")
     {
-        Instance = base.Spawn(pos, "Frog");
-        m_SM = new StateMachine(FrogState.Idle);
+        Instance = base.Spawn(pos, name);
+        m_SM = new StateMachine(FrogState.Jump);
         return Instance;
     }
 

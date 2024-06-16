@@ -1,7 +1,7 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
+using Object = UnityEngine.Object;
 
 public abstract class Piece
 {
@@ -33,6 +33,7 @@ public abstract class Piece
     protected byte m_ID;
 
     public GameObject Instance { get; protected set; }
+    public Vector3 Position; // set position in the setter of Instance
 
     public StateMachine m_SM = null;
 
@@ -48,5 +49,6 @@ public abstract class Piece
 public enum PieceName
 {
     None,
-    Frog
+    Frog,
+    Crate
 }
