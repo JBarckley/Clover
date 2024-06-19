@@ -27,10 +27,13 @@ public static class BattleControl
         }
     }
 
-    public static void Update(GameBoard board)
+    public static void Update()
     {
-        //Debug.Log("BATTLE!");
+        BattleBoard.Update();
+    }
 
-        board.Update();
+    public static void PhysicsUpdate()
+    {
+        BattleBoard.PhysicsUpdate();
     }
 }

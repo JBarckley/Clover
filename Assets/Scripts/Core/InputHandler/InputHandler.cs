@@ -7,30 +7,20 @@ using UnityEngine.InputSystem;
 using Action = System.Action;
 using Object = UnityEngine.Object;
 
-public class InputHandler : MonoBehaviour
+public class InputHandler : MonoSingleton<InputHandler>
 {
-    public InputSystem input;
-
-    public Vector2 moveVector;
-
-    public Action<InputAction.CallbackContext> enterBattleAction
-    {
-        set => input.UIUX.Battle.performed += value;
-    }
-
-    void Awake()
-    {
-        input = new InputSystem();
-    }
+    public static InputSystem input;
+    public static Vector2 moveVector;
 
     void Update()
     {
         moveVector = input.Player.Move.ReadValue<Vector2>();
-        //enterBattleButton = input.UIUX.Battle.ReadValue<bool>();
     }
 
     void OnEnable()
     {
+        input = new InputSystem();
+
         input.Player.Enable();
         input.UIUX.Enable();
     }
@@ -39,6 +29,11 @@ public class InputHandler : MonoBehaviour
     {
         input.Player.Disable();
         input.UIUX.Disable();
+    }
+
+    public Action<InputAction.CallbackContext> enterBattleAction
+    {
+        set => input.UIUX.Battle.performed += value;
     }
 }
 

@@ -1,27 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Master : MonoBehaviour
+public class Master : MonoSingleton<Master>
 {
     private Player m_Player;
     private BattleMaster m_BattleMaster;
     private Camera m_Camera;
     private InputHandler m_InputHandler;
 
-    private void Awake()
+    private void Start()
     {
-        m_Player = FindObjectOfType<Player>();
-        m_BattleMaster = FindObjectOfType<BattleMaster>();
-        m_Camera = FindObjectOfType<Camera>();
-        m_InputHandler = gameObject.AddComponent<InputHandler>(m_BattleMaster.StartBattle);
+        gameObject.AddComponent<InputHandler>(BattleMaster.Instance.StartBattle);
+
+        m_Player = Player.Instance;
+        m_BattleMaster = BattleMaster.Instance;
+        m_Camera = GameCamera.Cam;
+        m_InputHandler = InputHandler.Instance;
+
+        DontDestroyOnLoad(this);
     }
 
     private void Update()
     {
-        m_Player.Move(m_InputHandler.moveVector);
-        //Debug.Log(m_InputHandler.enterBattleButton);
+        m_Player.Move(InputHandler.moveVector);
     }
 
     public void Battle()
@@ -29,7 +33,7 @@ public class Master : MonoBehaviour
         if (GamePhase.Current == Phase.World)
         {
             GamePhase.Current = Phase.PreBattle;
-            m_BattleMaster.SetupBattle();
+            BattleMaster.Instance.SetupBattle();
         }
         else
         {
@@ -38,10 +42,8 @@ public class Master : MonoBehaviour
     }
 }
 
-public struct GamePhase
+public static class GamePhase
 {
-    private static GamePhase _instance = new GamePhase();
-    public static GamePhase Instance { get { return _instance; } }
     public static Phase Current = Phase.World;
 }
 

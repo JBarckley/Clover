@@ -27,20 +27,25 @@ public static class BattleBoard
         }
     }
 
+    public static void Update()
+    {
+        foreach (Piece p in Board)
+        {
+            p.Update();
+        }
+    }
+
+    public static void PhysicsUpdate()
+    {
+        foreach (Piece p in Board)
+        {
+            p.PhysicsUpdate();
+        }
+    }
+
     public static Piece Find(Piece piece)
     {
         return piece; // not yet implemented
-    }
-
-    public static void Teleport(Piece piece, Vector2 move)
-    {
-        //Debug.Log("here2" + (piece.Instance.transform.position + (Vector3)move));
-        if ((piece.Instance.transform.position + (Vector3)move).WithinBoardBoundary())
-        {
-            //Debug.Log("here3");
-            piece.Instance.transform.position += (Vector3)move;
-            piece.Position = piece.Instance.transform.position;
-        }
     }
 
     /*
