@@ -1,23 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BattleMaster : MonoBehaviour
+public class BattleMaster : MonoSingleton<BattleMaster>
 {
+    public System.Action<Vector3, float, float> Move;
+    private static GameObject boardInstance;
+    public static GameBoard Board;
 
-    private Camera cam;
-    private GameObject boardInstance;
-
-    public GameBoard Board;
+    private static Camera cam;
 
     void Update()
     {
         if (GamePhase.Current == Phase.Battle)
         {
-            BattleControl.Update(Board);
+            BattleControl.Update();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (GamePhase.Current == Phase.Battle)
+        {
+            BattleControl.PhysicsUpdate();
         }
     }
 
@@ -54,21 +63,23 @@ public class BattleMaster : MonoBehaviour
                                                                                    { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
     private static PieceLayout MaximalPlayer = new PieceLayout(new PieceName[,] {{ PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog},
                                                                                  { PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog}});
+    private static PieceLayout MaximalPlayer2 = new PieceLayout(new PieceName[,] {{ PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog},
+                                                                                 { PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog}});
     private static PieceLayout MaximalOpponent = new PieceLayout(new PieceName[,] {{ PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate},
                                                                                    { PieceName.None, PieceName.None, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.None, PieceName.None}});
 
-    public void SetupBattle()
+    public static void SetupBattle()
     {
-        cam.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
-        boardInstance = (GameObject) Instantiate(Resources.Load("World/Board"), transform.position, Quaternion.identity);
+        GameCamera.Teleport(GetPosition2());
+        boardInstance = (GameObject) Instantiate(Resources.Load("World/Board"), GetPosition3(), Quaternion.identity);
         PieceLayout PlayerPieces = MaximalPlayer;
-        PieceLayout OpponentPieces = MaximalOpponent;
+        PieceLayout OpponentPieces = MaximalPlayer2;
         Board = new GameBoard(PlayerPieces, OpponentPieces);
         BattleControl.SpawnPieces(Board, boardInstance.transform.position);
         Board.Print();
     }
 
-    public void StartBattle(InputAction.CallbackContext context)
+    public static void StartBattle(InputAction.CallbackContext context)
     {
         if (GamePhase.Current == Phase.PreBattle)
         {

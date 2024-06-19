@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -24,9 +25,47 @@ public abstract class Piece
         return Instance;
     }
 
+    public void Update()
+    {
+        m_SM.Current.Update(this);
+    }
+
+    public void PhysicsUpdate()
+    {
+        m_SM.Current.PhysicsUpdate(this);
+    }
+
+    public virtual void Teleport(Vector3 displacement)
+    {
+        if ((Instance.transform.position + displacement).IsWithinBoardBoundary())
+        {
+            //Debug.Log("here3");
+            Instance.transform.position += displacement;
+            Position = Instance.transform.position;
+        }
+    }
+
+    public virtual IEnumerator Move(Vector3 start, Vector3 end, float duration)
+    {
+        float elapsedTime = 0;
+        end = end.WithinBoardBoundary();
+
+        while (elapsedTime < duration)
+        {
+            Instance.transform.position = Vector3.Lerp(start, end, elapsedTime / duration);
+            Position = Instance.transform.position;
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        Instance.transform.position = end;
+    }
+
     public abstract void Action();
 
     public abstract void Remove();
+
+
 
     public override string ToString()
     {
@@ -41,6 +80,8 @@ public abstract class Piece
     public Vector3 Position; // set position in the setter of Instance
 
     public StateMachine m_SM = null;
+
+    // static battleboard such that all pieces reference the same memory!!!!
 
     public PieceName Name 
     { 

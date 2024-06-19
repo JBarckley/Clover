@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoSingleton<PlayerController>
 {
-    private Master m_Master;
-
-    private InputHandler m_InputHandler;
     private Rigidbody2D m_Rigidbody;
     private BoxCollider2D m_BoxCollider;
 
@@ -15,11 +12,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 workspace;
 
-    void Awake()
+    private void Start()
     {
-        m_Master = FindObjectOfType<Master>();
-
-        m_InputHandler = gameObject.AddComponent<InputHandler>();
         m_BoxCollider = gameObject.AddComponent<BoxCollider2D>();
         m_Rigidbody = gameObject.AddComponent<Rigidbody2D>();
 
@@ -35,7 +29,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Frog"))
         {
             Debug.Log("hit frog");
-            m_Master.Battle();
+            Master.Instance.Battle();
         }
     }
 

@@ -43,22 +43,6 @@ public struct GameBoard
         }
     }
 
-    public void Update()
-    {
-        BattleBoard.BoardUtility.FindKNN(1);
-        for (int i = 0; i < 8; i++)
-        {
-            for (int k = 0; k < 8; k++)
-            {
-                if (m_Board[i, k].m_SM != null)
-                {
-                    StateMachine sm = m_Board[i, k].m_SM;
-                    sm.Current.Update(m_Board[i, k]);
-                }
-            }
-        }
-    }
-
     public Piece this[int x, int y]
     {
         get
@@ -154,15 +138,20 @@ public struct PieceLayout
 public struct Boundary
 {
     public static float Top = 5.6f;
-    public static float Bottom = -Top;
+    public static float Bottom = -Top + 0.5f;
     public static float Right = -25f + Top;
-    public static float Left = -25f + Bottom;
+    public static float Left = -25f - Top;
 }
 
 public static class VectorExtension
 {
-    public static bool WithinBoardBoundary(this Vector3 vec)
+    public static bool IsWithinBoardBoundary(this Vector3 vec)
     {
         return vec.x < Boundary.Right && vec.x > Boundary.Left && vec.y > Boundary.Bottom && vec.y < Boundary.Top;
+    }
+
+    public static Vector3 WithinBoardBoundary(this Vector3 vec)
+    {
+        return new Vector3(Mathf.Clamp(vec.x, Boundary.Left, Boundary.Right), Mathf.Clamp(vec.y, Boundary.Bottom, Boundary.Top), vec.z);
     }
 }
