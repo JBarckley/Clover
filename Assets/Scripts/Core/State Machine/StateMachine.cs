@@ -6,18 +6,19 @@ using UnityEngine;
 public class StateMachine
 {
     public BaseState Current;
-    public TimerInstance Timer = new TimerInstance();
+    public Piece Master;
 
-    public StateMachine(BaseState initState)
+    public StateMachine(Piece piece, BaseState initState)
     {
         Debug.Log("new SM");
         Current = initState;
+        Master = piece;
     }
 
-    public void ToState(Piece piece, BaseState nextState)
+    public void ToState(BaseState nextState)
     {
-        Current.Exit(piece);
+        Current.Exit(Master);
         Current = nextState;
-        nextState.Enter(piece);
+        nextState.Enter(Master);
     }
 }

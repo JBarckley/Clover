@@ -17,6 +17,11 @@ public abstract class Piece
         return m_ID;
     }
 
+    public void ToState(BaseState nextState)
+    {
+        m_SM.ToState(nextState);
+    }
+
     public virtual GameObject Spawn(Vector2 pos, string name = "")
     {
         if (name == "None") return null; // None pieces are stored as a default circle sprite for debug purposes, but this line removes them completely.
@@ -45,6 +50,9 @@ public abstract class Piece
         }
     }
 
+    private readonly WaitForFixedUpdate waitFixedUpdate = new WaitForFixedUpdate();
+    delegate void changeState();
+
     public virtual IEnumerator Move(Vector3 start, Vector3 end, float duration)
     {
         float elapsedTime = 0;
@@ -55,7 +63,7 @@ public abstract class Piece
             Instance.transform.position = Vector3.Lerp(start, end, elapsedTime / duration);
             Position = Instance.transform.position;
             elapsedTime += Time.deltaTime;
-            yield return new WaitForFixedUpdate();
+            yield return waitFixedUpdate;
         }
 
         Instance.transform.position = end;
@@ -77,11 +85,12 @@ public abstract class Piece
     protected byte m_ID;
 
     public GameObject Instance { get; protected set; }
-    public Vector3 Position; // set position in the setter of Instance
+    public Vector3 Position;
 
     public StateMachine m_SM = null;
+    public TimerInstance Timer = new TimerInstance();
 
-    // static battleboard such that all pieces reference the same memory!!!!
+    // static battleboard such that all pieces reference the same memory!!!! -- done
 
     public PieceName Name 
     { 

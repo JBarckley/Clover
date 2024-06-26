@@ -11,7 +11,7 @@ public class CratePiece : Piece
 
     public override GameObject Spawn(Vector2 pos, string name = "")
     {
-        m_SM = new StateMachine(CrateState.Idle); // using a state machine here is unnecessary, but I like sticking with the convention for the few edge cases.
+        m_SM = new StateMachine(this, CrateState.Idle); // using a state machine here is unnecessary, but I like sticking with the convention for the few edge cases.
         return base.Spawn(pos, "Crate");
     }
 

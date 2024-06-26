@@ -10,8 +10,6 @@ public class TimerInstance
     public bool isWaiting;
     public float time;
 
-    //private static readonly Timer timer = Timer.Get();
-
     public TimerInstance(float seconds = 0)
     {
         if (seconds == 0)

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class FrogPiece : Piece
 {
-
     public FrogPiece()
     {
         m_ID = 1;
@@ -13,7 +12,7 @@ public class FrogPiece : Piece
 
     public override GameObject Spawn(Vector2 pos, string name = "")
     {
-        m_SM = new StateMachine(FrogState.Idle);
+        m_SM = new StateMachine(this, FrogState.Idle);
         return base.Spawn(pos, "Frog");
     }
 
@@ -38,16 +37,15 @@ public class FrogIdle : State<FrogIdle>
 {
     public override void Enter(Piece piece)
     {
-        piece.m_SM.Timer += 0.2f;
+        piece.Timer += 0.125f + (Random.value / 10);
     }
 
     public override void Update(Piece piece)
     {
-        StateMachine sm = piece.m_SM;
-        if (!sm.Timer)
+        if (!piece.Timer)
         {
             Debug.Log("to jump");
-            sm.ToState(piece, FrogState.Jump);
+            piece.ToState(FrogState.Jump);
         }
     }
 }
@@ -61,13 +59,13 @@ public class FrogJump : State<FrogJump>
 
     public override void PhysicsUpdate(Piece piece)
     {
-        //piece.Teleport(Random.insideUnitCircle); 
+        //piece.Teleport(Random.insideUnitCircle);
     }
 
     private IEnumerator Jump(Piece piece)
     {
         yield return BattleMaster.Instance.StartCoroutine(piece.Move(piece.Position, piece.Position + (Vector3)Random.insideUnitCircle * 2, 0.75f));
 
-        piece.m_SM.ToState(piece, FrogState.Idle);
+        piece.ToState(FrogState.Idle);
     }
 }
