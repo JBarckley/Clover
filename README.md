@@ -11,6 +11,5 @@ The starting point for this idea is:
 - That said, if the player stumbles onto a later-game enemy at a low level, it should be almost impossible to win.
 - Mid-battle interaction is a design space that warrants consideration, but I'm focused on the nuts and bolts of the design in this big picture.
 - Boss's boards act a little bit differently to minor enemies, where the boss has a "king" unit signified with some design element that when it dies, the boss is killed no matter the other pieces remaining a la chess.
-- Clover is a name I thought of randomly and has no significance whatsoever.
 
 https://trello.com/b/2saHfyNh/auto-rpg
