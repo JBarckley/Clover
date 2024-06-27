@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BTRepeater>
+	<BTContextSetter context="SetFrogIdleContext">
+		<BTDelayAfter>
+			<BTContextSetter context="SetFrogJumpContext">
+				<BTMoveLeaf />
+			</BTContextSetter>
+		</BTDelayAfter>
+	</BTContextSetter>
+</BTRepeater>

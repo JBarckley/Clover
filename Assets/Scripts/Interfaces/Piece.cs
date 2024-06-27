@@ -22,22 +22,22 @@ public abstract class Piece
         m_SM.ToState(nextState);
     }
 
-    public virtual GameObject Spawn(Vector2 pos, string name = "")
+    public virtual void Spawn(Vector2 pos, string name = "")
     {
-        if (name == "None") return null; // None pieces are stored as a default circle sprite for debug purposes, but this line removes them completely.
-        Instance = (GameObject)Object.Instantiate(Resources.Load("Pieces/" + name, typeof(GameObject)), pos, Quaternion.identity);
+        if (name == "None") return; // None pieces are stored as a default circle sprite for debug purposes, but this line removes them completely.
+        Instance = (GameObject)Object.Instantiate(Resources.Load("Pieces/" + name + "/" + name, typeof(GameObject)), pos, Quaternion.identity);
         Position = Instance.transform.position;
-        return Instance;
     }
 
     public void Update()
     {
-        m_SM.Current.Update(this);
+        //m_SM.Current.Update(this);
+        m_Behavior.Tick();
     }
 
     public void PhysicsUpdate()
     {
-        m_SM.Current.PhysicsUpdate(this);
+        //m_SM.Current.PhysicsUpdate(this);
     }
 
     public virtual void Teleport(Vector3 displacement)
@@ -88,6 +88,7 @@ public abstract class Piece
     public Vector3 Position;
 
     public StateMachine m_SM = null;
+    public BTree m_Behavior = null;
     public TimerInstance Timer = new TimerInstance();
 
     // static battleboard such that all pieces reference the same memory!!!! -- done

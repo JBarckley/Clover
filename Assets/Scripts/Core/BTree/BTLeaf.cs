@@ -6,7 +6,7 @@ public abstract class BTLeaf : BTNode
 {
     public virtual void Init(BTContext context) { }
 
-    public virtual BTStatus Tick(BTContext context) { return BTStatus.Failure; }
+    public virtual BTStatus Tick(BTContext context) { Debug.Log("Ticking an abstract leaf??");  return BTStatus.Success; }
 
     public void AddChild(BTNode node)
     {
@@ -18,7 +18,7 @@ public abstract class BTLeaf : BTNode
         throw new System.Exception("BTLeaf node cannot remove children");
     }
 
-    public void RemoveAllChildren(BTNode node)
+    public void RemoveAllChildren()
     {
         throw new System.Exception("BTLeaf node cannot remove all childen");
     }

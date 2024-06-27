@@ -20,6 +20,8 @@ public class Master : MonoSingleton<Master>
         m_Camera = GameCamera.Cam;
         m_InputHandler = InputHandler.Instance;
 
+        DebugXDocument debug = new DebugXDocument("Assets/Resources/Pieces/Frog/Frog.xml");
+
         DontDestroyOnLoad(this);
     }
 

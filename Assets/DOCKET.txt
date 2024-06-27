@@ -1,0 +1,32 @@
+6/26 ON THE DOCKET:
+
+	- Refactor to allow Randomness in BT Leaf nodes
+	- Research built-in ways to read XML documents in C# and the potential of using XML as a tool to build dynamic BTrees for new pieces
+	- Create the third piece, a "fire ball" that reflects perfectly at the edges of the board
+	- Starting researching UI related to drawing and styling health bars of pieces during battle
+
+6/27 ON THE DOCKET:
+
+	- Create the third piece, a "fire ball" that reflects perfectly at the edges of the board
+	- Starting researching UI related to drawing and styling health bars of pieces during battle
+	- Generalize the Move Leaf?
+
+
+
+
+
+
+
+
+IDEAS:
+
+	SMALL QUESTIONS
+	- Collectible board skins? idk
+	
+	BIG QUESTIONS
+	- How do I make the player feel like they're doing something during an auto chess battle?
+		> In Candy Box 1 & 2, the gameplay has significant similarities to auto chess in the sense that your character will automatically fight without you pressing anything,
+		> but in order to make progress, you have to strategically use potions and other in-battle items at the right time to overcome your opponents. Could this work?
+
+			>> I don't love this idea. This is the only thing I've been able to think of for some time, but once I keep prototyping there has got to be something more interesting
+			>> out there. Got to.

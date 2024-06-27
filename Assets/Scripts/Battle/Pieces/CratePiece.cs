@@ -9,10 +9,17 @@ public class CratePiece : Piece
         m_ID = 2;
     }
 
-    public override GameObject Spawn(Vector2 pos, string name = "")
+    public override void Spawn(Vector2 pos, string name = "")
     {
+        base.Spawn(pos, "Crate");
+
         m_SM = new StateMachine(this, CrateState.Idle); // using a state machine here is unnecessary, but I like sticking with the convention for the few edge cases.
-        return base.Spawn(pos, "Crate");
+
+        //BTEmptyLeaf Empty = new BTEmptyLeaf();
+        //BTree CrateBehavior = new BTree(Empty, this);
+        BTree CrateBehavior = new BTree("Assets/Resources/Pieces/Crate/Crate.xml", this);
+
+        m_Behavior = CrateBehavior;
     }
 
     public override void Action()
@@ -36,5 +43,13 @@ public class CrateIdle : State<CrateIdle>
     public override void Update(Piece piece)
     {
         // empty
+    }
+}
+
+public class BTEmptyLeaf : BTLeaf
+{
+    public override BTStatus Tick(BTContext context)
+    {
+        return BTStatus.Success;
     }
 }

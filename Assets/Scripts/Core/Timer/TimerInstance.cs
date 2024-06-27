@@ -1,13 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.AI;
 using Object = UnityEngine.Object;
 
+/// <summary>
+/// A TimerInstance can be delayed using TimerInstance t += float delay.
+/// 
+/// A TimerInstance can be used as a boolean value where it will be false until the delay is over, where it will be true.
+/// </summary>
 public class TimerInstance
 {
-    public bool isWaiting;
+    public bool isWaiting = false;
     public float time;
 
     public TimerInstance(float seconds = 0)
@@ -15,31 +21,19 @@ public class TimerInstance
         if (seconds == 0)
         {
             time = 0;
-            isWaiting = false;
         }
         else
         {
             time = Time.time + seconds;
-            Debug.Log(time);
             isWaiting = true;
 
             Timer.Wait(this);
         }
     }
 
-    public static bool operator true(TimerInstance inst)
+    public static implicit operator bool(TimerInstance inst)
     {
-        return inst.isWaiting == true;
-    }
-
-    public static bool operator false(TimerInstance inst)
-    {
-        return inst.isWaiting == false;
-    }
-
-    public static bool operator !(TimerInstance inst)
-    {
-        return !inst.isWaiting;
+        return inst.isWaiting;
     }
 
     public static TimerInstance operator +(TimerInstance inst, float b) 

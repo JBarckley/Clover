@@ -10,7 +10,7 @@ public abstract class BTComposite : BTNode
     protected List<BTNode>.Enumerator m_itr;
     protected BTNode m_currentNode;
 
-    public virtual void Init(BTContext context)
+    public void Init(BTContext context)
     {
         m_itr = m_nodes.GetEnumerator();
         pickNextNode(context);
@@ -60,7 +60,7 @@ public abstract class BTComposite : BTNode
         // m_itr = m_nodes.GetEnumerator();     * IF I WANT TO ADD NODES AT RUNTIME, I HAVE TO ADD THIS LINE. CURRENTLY, I AM NOT ADDING NODES AT RUNTIME *
     }
 
-    public void RemoveAllChildren(BTNode node)
+    public void RemoveAllChildren()
     {
         m_nodes.Clear();
         m_currentNode = null;

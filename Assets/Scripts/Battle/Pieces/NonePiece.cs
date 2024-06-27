@@ -9,9 +9,9 @@ public class NonePiece : Piece
         m_ID = 0;
     }
 
-    public override GameObject Spawn(Vector2 pos, string name = "")
+    public override void Spawn(Vector2 pos, string name = "")
     {
-        return base.Spawn(pos, "None");
+        base.Spawn(pos, "None");
     }
 
     public override void Action()

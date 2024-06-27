@@ -71,7 +71,7 @@ public class BattleMaster : MonoSingleton<BattleMaster>
     {
         GameCamera.Teleport(GetPosition2());
         boardInstance = (GameObject) Instantiate(Resources.Load("World/Board"), GetPosition3(), Quaternion.identity);
-        PieceLayout PlayerPieces = MinimalPlayer;
+        PieceLayout PlayerPieces = MaximalPlayer;
         PieceLayout OpponentPieces = MaximalOpponent;
         Board = new GameBoard(PlayerPieces, OpponentPieces);
         BattleControl.SpawnPieces(Board, boardInstance.transform.position);
