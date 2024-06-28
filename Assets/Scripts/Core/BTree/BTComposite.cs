@@ -57,7 +57,7 @@ public abstract class BTComposite : BTNode
         {
             throw new System.Exception("Trying to add the same node to a composite twice");
         }
-        // m_itr = m_nodes.GetEnumerator();     * IF I WANT TO ADD NODES AT RUNTIME, I HAVE TO ADD THIS LINE. CURRENTLY, I AM NOT ADDING NODES AT RUNTIME *
+        m_itr = m_nodes.GetEnumerator();
     }
 
     public void RemoveAllChildren()
@@ -72,7 +72,7 @@ public abstract class BTComposite : BTNode
         if (m_nodes.Contains(node))
         {
             m_nodes.Remove(node);
-            // m_itr = m_nodes.GetEnumerator();     * IF I WANT TO ADD NODES AT RUNTIME, I HAVE TO ADD THIS LINE. CURRENTLY, I AM NOT ADDING NODES AT RUNTIME *
+            m_itr = m_nodes.GetEnumerator();-
         }
         else
         {

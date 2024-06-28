@@ -116,16 +116,24 @@ public class BTRepeatUntilFailure : BTRepeaterUntil
     }
 }
 
-/*
- *          DELAY DECORATOR
- *              - Requires Context Variable "delay"
- */
 
+/// <remarks>
+/// Required Context:
+///     "delay"
+///     - float: length of delay in seconds
+/// </remarks>
 public abstract class BTDelay : BTDecorator
 {
     protected float m_Delay;
     
     protected TimerInstance m_Timer = new TimerInstance();
+
+    public override void Init(BTContext context)
+    {
+        base.Init(context);
+
+        m_Delay = (float)context.GetVariable("delay");
+    }
 }
 
 public class BTDelayBefore : BTDelay
@@ -134,7 +142,7 @@ public class BTDelayBefore : BTDelay
     {
         base.Init(context);
 
-        m_Timer += (float)context.GetVariable("delay");
+        m_Timer += m_Delay;
     }
 
     public override BTStatus Tick(BTContext context)
@@ -157,7 +165,6 @@ public class BTDelayAfter : BTDelay
     {
         base.Init(context);
 
-        m_Delay = (float)context.GetVariable("delay");
         leafDone = false;
         timerStarted = false;
         status = BTStatus.Running;

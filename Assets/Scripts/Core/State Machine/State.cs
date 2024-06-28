@@ -25,3 +25,61 @@ public abstract class State<T> : BaseState where T : State<T>, new()
         return Instance;
     }
 }
+
+/*
+public struct FrogState
+{
+    public static FrogIdle Idle = FrogIdle.Get();
+    public static FrogJump Jump = FrogJump.Get();
+}
+
+public class FrogIdle : State<FrogIdle>
+{
+    public override void Enter(Piece piece)
+    {
+        piece.Timer += 0.125f + (UnityEngine.Random.value / 10);
+    }
+
+    public override void Update(Piece piece)
+    {
+        if (!piece.Timer)
+        {
+            Debug.Log("to jump");
+            piece.ToState(FrogState.Jump);
+        }
+    }
+}
+
+public class FrogJump : State<FrogJump>
+{
+    public override void Enter(Piece piece)
+    {
+        BattleMaster.Instance.StartCoroutine(Jump(piece));
+    }
+
+    public override void PhysicsUpdate(Piece piece)
+    {
+        //piece.Teleport(Random.insideUnitCircle);
+    }
+
+    private IEnumerator Jump(Piece piece)
+    {
+        yield return BattleMaster.Instance.StartCoroutine(piece.Move(piece.Position, piece.Position + (Vector3)Random.insideUnitCircle * 2, 0.75f));
+
+        piece.ToState(FrogState.Idle);
+    }
+}
+
+public struct CrateState
+{
+    public static CrateIdle Idle = new CrateIdle();
+}
+
+public class CrateIdle : State<CrateIdle>
+{
+    public override void Update(Piece piece)
+    {
+        // empty
+    }
+}
+*/

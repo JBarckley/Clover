@@ -17,11 +17,6 @@ public abstract class Piece
         return m_ID;
     }
 
-    public void ToState(BaseState nextState)
-    {
-        m_SM.ToState(nextState);
-    }
-
     public virtual void Spawn(Vector2 pos, string name = "")
     {
         if (name == "None") return; // None pieces are stored as a default circle sprite for debug purposes, but this line removes them completely.
@@ -31,7 +26,6 @@ public abstract class Piece
 
     public void Update()
     {
-        //m_SM.Current.Update(this);
         m_Behavior.Tick();
     }
 
@@ -40,40 +34,7 @@ public abstract class Piece
         //m_SM.Current.PhysicsUpdate(this);
     }
 
-    public virtual void Teleport(Vector3 displacement)
-    {
-        if ((Instance.transform.position + displacement).IsWithinBoardBoundary())
-        {
-            //Debug.Log("here3");
-            Instance.transform.position += displacement;
-            Position = Instance.transform.position;
-        }
-    }
-
-    private readonly WaitForFixedUpdate waitFixedUpdate = new WaitForFixedUpdate();
-    delegate void changeState();
-
-    public virtual IEnumerator Move(Vector3 start, Vector3 end, float duration)
-    {
-        float elapsedTime = 0;
-        end = end.WithinBoardBoundary();
-
-        while (elapsedTime < duration)
-        {
-            Instance.transform.position = Vector3.Lerp(start, end, elapsedTime / duration);
-            Position = Instance.transform.position;
-            elapsedTime += Time.deltaTime;
-            yield return waitFixedUpdate;
-        }
-
-        Instance.transform.position = end;
-    }
-
-    public abstract void Action();
-
     public abstract void Remove();
-
-
 
     public override string ToString()
     {
@@ -87,7 +48,6 @@ public abstract class Piece
     public GameObject Instance { get; protected set; }
     public Vector3 Position;
 
-    public StateMachine m_SM = null;
     public BTree m_Behavior = null;
     public TimerInstance Timer = new TimerInstance();
 

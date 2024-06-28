@@ -14,11 +14,6 @@ public class NonePiece : Piece
         base.Spawn(pos, "None");
     }
 
-    public override void Action()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public override void Remove()
     {
         throw new System.NotImplementedException();
