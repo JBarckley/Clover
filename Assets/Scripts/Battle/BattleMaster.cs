@@ -66,13 +66,15 @@ public class BattleMaster : MonoSingleton<BattleMaster>
                                                                                  { PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog}});
     private static PieceLayout MaximalOpponent = new PieceLayout(new PieceName[,] {{ PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate},
                                                                                    { PieceName.None, PieceName.None, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.None, PieceName.None}});
+    private static PieceLayout OneFireball = new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.Fireball, PieceName.None, PieceName.None, PieceName.None},
+                                                                                   { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
 
     public void SetupBattle()
     {
         GameCamera.Teleport(GetPosition2());
         boardInstance = (GameObject) Instantiate(Resources.Load("World/Board"), GetPosition3(), Quaternion.identity);
         PieceLayout PlayerPieces = MaximalPlayer;
-        PieceLayout OpponentPieces = MaximalOpponent;
+        PieceLayout OpponentPieces = OneFireball;
         Board = new GameBoard(PlayerPieces, OpponentPieces);
         BattleControl.SpawnPieces(Board, boardInstance.transform.position);
         Board.Print();

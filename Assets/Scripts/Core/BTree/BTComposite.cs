@@ -72,7 +72,7 @@ public abstract class BTComposite : BTNode
         if (m_nodes.Contains(node))
         {
             m_nodes.Remove(node);
-            m_itr = m_nodes.GetEnumerator();-
+            m_itr = m_nodes.GetEnumerator();
         }
         else
         {

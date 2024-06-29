@@ -154,4 +154,48 @@ public static class VectorExtension
     {
         return new Vector3(Mathf.Clamp(vec.x, Boundary.Left, Boundary.Right), Mathf.Clamp(vec.y, Boundary.Bottom, Boundary.Top), vec.z);
     }
+
+    public static Vector3 BoardIntersection(this Vector3 vec, Vector3 direction)
+    {
+        float IntersectionX;
+        float IntersectionY;
+        float IntersectionLine;
+        Vector3 Intersection;
+
+        if (vec.x > 0)  // going towards top
+        {
+            IntersectionLine = Boundary.Top;
+        }
+        else
+        {
+            IntersectionLine = Boundary.Bottom;
+        }
+
+        IntersectionY = (IntersectionLine - vec.y) / direction.y;
+        IntersectionX = (vec.x + (direction.x * IntersectionY)) / IntersectionLine;
+        Intersection = new Vector3(IntersectionX, IntersectionY, 0f);
+
+        if (Intersection.WithinBoardBoundary() == Intersection)
+        {
+            return Intersection;
+        }
+        else    // intersection is going towards a side
+        {
+            if (vec.y > 0)
+            {
+                IntersectionLine = Boundary.Right;
+            }
+            else
+            {
+                IntersectionLine = Boundary.Left;
+            }
+
+            IntersectionX = (IntersectionLine - vec.x) / direction.x;
+            IntersectionY = (vec.y + (direction.y * IntersectionY)) / IntersectionLine;
+
+            Intersection = new Vector3(IntersectionX, IntersectionY, 0f);
+            return Intersection;
+        }
+        
+    }
 }

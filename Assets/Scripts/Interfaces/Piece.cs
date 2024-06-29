@@ -66,5 +66,6 @@ public enum PieceName
 {
     None,
     Frog,
-    Crate
+    Crate,
+    Fireball
 }

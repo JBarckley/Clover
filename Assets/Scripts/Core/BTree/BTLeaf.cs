@@ -35,10 +35,10 @@ public class BTEmptyLeaf : BTLeaf
 
 /// <remarks>
 /// Required Context:
-///     "end"
-///     - Vector3: final position of movement
+///     "end:"
+///     - Vector3: final position of movement.
 ///     "duration"
-///     - float: duration of the movement
+///     - float: duration of the movement.
 /// </remarks>
 public class BTMoveLeaf : BTLeaf
 {
