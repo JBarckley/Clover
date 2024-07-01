@@ -1,14 +1,14 @@
 6/26 ON THE DOCKET:
 
-	- Refactor to allow Randomness in BT Leaf nodes
-	- Research built-in ways to read XML documents in C# and the potential of using XML as a tool to build dynamic BTrees for new pieces
-	- Create the third piece, a "fire ball" that reflects perfectly at the edges of the board
+	-x Refactor to allow Randomness in BT Leaf nodes
+	-x Research built-in ways to read XML documents in C# and the potential of using XML as a tool to build dynamic BTrees for new pieces
+	-x Create the third piece, a "fire ball" that reflects perfectly at the edges of the board
 	- Starting researching UI related to drawing and styling health bars of pieces during battle
 
 6/27 ON THE DOCKET:
 
-	- Create the third piece, a "fire ball" that reflects perfectly at the edges of the board
-	- Starting researching UI related to drawing and styling health bars of pieces during battle
+	-x Create the third piece, a "fire ball" that reflects perfectly at the edges of the board
+	- Starting researching UI related to drawing and styling health bars of pieces during battle		---> I'll do this later. For now I'd rather use an internal HP float and iterate on combat/targeting first
 	- Generalize the Move Leaf?
 
 

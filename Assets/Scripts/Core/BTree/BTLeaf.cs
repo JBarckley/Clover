@@ -37,26 +37,30 @@ public class BTEmptyLeaf : BTLeaf
 /// Required Context:
 ///     "end:"
 ///     - Vector3: final position of movement.
-///     "duration"
-///     - float: duration of the movement.
+///     "speed"
+///     - float: speed of the movement.
 /// </remarks>
 public class BTMoveLeaf : BTLeaf
 {
-    Piece piece;
+    protected Piece piece;
 
-    float elapsedTime;
-    float duration;
+    protected float elapsedTime;
+    protected float duration;
+    protected float speed = 0f;
 
-    Vector3 start;
-    Vector3 end;
+    protected Vector3 start;
+    protected Vector3 end = Vector3.zero;
 
     public override void Init(BTContext context)
     {
-        piece = (Piece)context.GetVariable("piece");
+        piece ??= (Piece)context.GetVariable("piece");
 
         start = piece.Position;
         end = (Vector3)context.GetVariable("end");
-        duration = (float)context.GetVariable("duration");
+        speed = (float)context.GetVariable("speed");
+
+        duration = (1 / speed) * (end - start).magnitude;
+
         elapsedTime = 0f;
     }
 

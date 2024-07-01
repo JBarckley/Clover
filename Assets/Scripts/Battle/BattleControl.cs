@@ -27,6 +27,30 @@ public static class BattleControl
         }
     }
 
+    public static PieceLayout CreateFullLayout(PieceName name)
+    {
+        return new PieceLayout(new PieceName[,] {{ name, name, name, name, name, name, name, name},
+                                                 { PieceName.None, name, PieceName.None, name, PieceName.None, name, PieceName.None, name}});
+    }
+
+    public static PieceLayout CreateDoubleLayout(PieceName name)
+    {
+        return new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, name, name, PieceName.None, PieceName.None, PieceName.None},
+                                                 { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
+    }
+
+    public static PieceLayout CreateSingleLayout(PieceName name)
+    {
+        return new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, PieceName.None, name, PieceName.None, PieceName.None, PieceName.None},
+                                                 { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
+    }
+
+    public static PieceLayout CreateEmptyLayout()
+    {
+        return new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None},
+                                                 { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
+    }
+
     public static void Update()
     {
         BattleBoard.Update();

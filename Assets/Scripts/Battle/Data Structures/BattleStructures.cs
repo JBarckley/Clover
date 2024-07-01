@@ -10,10 +10,14 @@ using UnityEngine;
 // board dynamically updated with the flow of battle
 public static class BattleBoard
 {
-    private static List<Piece> Board = new List<Piece>();
+    private static Dictionary<string, List<Piece>> Board;
+    private static List<Piece> PlayerBoard = new List<Piece>();
 
     public static void Create(GameBoard GameBoard)
     {
+        Board.Add("player", new List<Piece>());
+        Board.Add("enemy", new List<Piece>());
+
         for (int i = 0; i < 8; i++)
         {
             for (int k = 0; k < 8; k++)
@@ -21,7 +25,14 @@ public static class BattleBoard
                 Piece piece = GameBoard[i, k];
                 if (piece.Name != PieceName.None)
                 {
-                    Board.Add(piece);
+                    if (i < 4)
+                    {
+                        Board["player"].Add(piece);
+                    }
+                    else
+                    {
+                        Board["enemy"].Add(piece);
+                    }
                 }
             }
         }
@@ -29,7 +40,11 @@ public static class BattleBoard
 
     public static void Update()
     {
-        foreach (Piece p in Board)
+        foreach (Piece p in Board["player"])
+        {
+            p.Update();
+        }
+        foreach (Piece p in Board["enemy"])
         {
             p.Update();
         }
@@ -37,9 +52,13 @@ public static class BattleBoard
 
     public static void PhysicsUpdate()
     {
-        foreach (Piece p in Board)
+        foreach (Piece p in Board["player"])
         {
-            p.PhysicsUpdate();
+            p.Update();
+        }
+        foreach (Piece p in Board["enemy"])
+        {
+            p.Update();
         }
     }
 
@@ -63,53 +82,91 @@ public static class BattleBoard
      *      
      */
 
-    public static class BoardUtility
+    public static class KNN
     {
-        public static Dictionary<Piece, List<Piece>> NearestNeighbors = new Dictionary<Piece, List<Piece>>();
+        public class KNNList
+        {
+            public Dictionary<string, List<Piece>> KNN;
+
+            public List<Piece> PlayerPieces { 
+                get
+                {
+                    return KNN["player"];
+                } 
+            }
+
+            public List<Piece> EnemyPieces { 
+                get
+                {
+                    return KNN["enemy"];
+                } 
+            }
+
+            public KNNList()
+            {
+                KNN.Add("player", new List<Piece>());
+                KNN.Add("enemy", new List<Piece>());
+            }
+        }
+
+        public static Dictionary<Piece, KNNList> NearestNeighbors = new Dictionary<Piece, KNNList>();
 
         public static bool AugmentKNN()
         {
             return true;
         }
 
+        /// <summary>
+        /// Finds the K-Nearest Neighbors for every piece on the board
+        /// </summary>
+        /// <param name="k">Amount of nearest neighbors</param>
+        /// <param name="perspective">"enemy" gives nearest enemies, "player" gives nearest players</param>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         public static void FindKNN(int k)
         {
             NearestNeighbors.Clear();
             List<Piece> nn = new List<Piece>();
+            KNNList _kNNList = new KNNList();
             if (k > Board.Count + 1) throw new IndexOutOfRangeException("Attempted to find more nearest neighbors than pieces exist");
-            foreach (Piece a in Board)
+            foreach (List<Piece> side in Board.Values)
             {
-                Piece FurthestNearNeighbor = null;
-                foreach (Piece b in Board)
+                foreach (Piece a in side)
                 {
-                    if (a == b) continue;
-                    if (nn.Count < k)
-                    {
-                        nn.Add(b);
-                        continue;
-                    }
-                    if (FurthestNearNeighbor == null)
-                    {
-                        float distance = 0;
-                        foreach (Piece p in nn)
+                    Piece FurthestNearNeighbor = null;
+                    foreach (string perspective in new List<string>{ "player", "enemy" }){
+                        foreach (Piece b in Board[perspective])
                         {
-                            float new_distance = Vector3.Distance(p, a);
-                            if (new_distance > distance)
+                            if (a == b) continue;
+                            if (nn.Count < k)
                             {
-                                distance = new_distance;
-                                FurthestNearNeighbor = p;
+                                nn.Add(b);
+                                continue;
+                            }
+                            if (FurthestNearNeighbor == null)
+                            {
+                                float distance = 0;
+                                foreach (Piece p in nn)
+                                {
+                                    float new_distance = Vector3.Distance(p, a);
+                                    if (new_distance > distance)
+                                    {
+                                        distance = new_distance;
+                                        FurthestNearNeighbor = p;
+                                    }
+                                }
+                            }
+                            if (Vector3.Distance(a, b) < Vector3.Distance(a, FurthestNearNeighbor))
+                            {
+                                nn.Remove(FurthestNearNeighbor);
+                                nn.Add(b);
+                                FurthestNearNeighbor = null;
                             }
                         }
+                        _kNNList.KNN[perspective] = nn;
                     }
-                    if (Vector3.Distance(a, b) < Vector3.Distance(a, FurthestNearNeighbor))
-                    {
-                        nn.Remove(FurthestNearNeighbor);
-                        nn.Add(b);
-                        FurthestNearNeighbor = null;
-                    }
+                    NearestNeighbors.Add(a, _kNNList);
+                    nn.Clear();
                 }
-                NearestNeighbors.Add(a, nn);
-                nn.Clear();
             }
         }
     }

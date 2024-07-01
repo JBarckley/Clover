@@ -56,18 +56,14 @@ public class BattleMaster : MonoSingleton<BattleMaster>
         cam = FindObjectOfType<Camera>();
     }
 
-    private static PieceLayout MinimalPlayer = new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, PieceName.Frog, PieceName.Frog, PieceName.None, PieceName.None, PieceName.None},
-                                                                                 { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
-    private static PieceLayout MinimalOpponent = new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.Crate, PieceName.None, PieceName.None, PieceName.None},
-                                                                                   { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
-    private static PieceLayout MaximalPlayer = new PieceLayout(new PieceName[,] {{ PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog},
-                                                                                 { PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog}});
-    private static PieceLayout MaximalPlayer2 = new PieceLayout(new PieceName[,] {{ PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog, PieceName.Frog},
-                                                                                 { PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog, PieceName.None, PieceName.Frog}});
-    private static PieceLayout MaximalOpponent = new PieceLayout(new PieceName[,] {{ PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate},
-                                                                                   { PieceName.None, PieceName.None, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.Crate, PieceName.None, PieceName.None}});
-    private static PieceLayout OneFireball = new PieceLayout(new PieceName[,] {{ PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.Fireball, PieceName.None, PieceName.None, PieceName.None},
-                                                                                   { PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None, PieceName.None}});
+    private static PieceLayout None = BattleControl.CreateEmptyLayout();
+    private static PieceLayout MinimalPlayer = BattleControl.CreateDoubleLayout(PieceName.Frog);
+    private static PieceLayout MinimalOpponent = BattleControl.CreateSingleLayout(PieceName.Crate);
+    private static PieceLayout MaximalPlayer = BattleControl.CreateFullLayout(PieceName.Frog);
+    private static PieceLayout MaximalPlayer2 = BattleControl.CreateFullLayout(PieceName.Frog);
+    private static PieceLayout MaximalOpponent = BattleControl.CreateFullLayout(PieceName.Crate);
+    private static PieceLayout OneFireball = BattleControl.CreateSingleLayout(PieceName.Fireball);
+    private static PieceLayout FullFireball = BattleControl.CreateFullLayout(PieceName.Fireball);
 
     public void SetupBattle()
     {

@@ -4,6 +4,8 @@ using System.Data;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class FrogPiece : Piece
 {
@@ -27,11 +29,34 @@ public class FrogPiece : Piece
     public void SetFrogJumpContext(BTContext context)
     {
         context.SetVariable("end", (Position + (Vector3)Random.insideUnitCircle * 2).WithinBoardBoundary());
-        context.SetVariable("duration", Random.value);
+        context.SetVariable("speed", 3.5f);
     }
 
     public void SetFrogIdleContext(BTContext context)
     {
         context.SetVariable("delay", 0.125f + (Random.value / 10));
+    }
+}
+
+public class BTFrogMoveLeaf : BTMoveLeaf
+{
+    public override void Init(BTContext context)
+    {
+        piece = (Piece)context.GetVariable("piece");
+
+        context.SetVariable("end", (piece.Position + (Vector3)Random.insideUnitCircle * 2).WithinBoardBoundary());
+        context.SetVariable("speed", 3.5f);
+
+        base.Init(context);
+    }
+}
+
+public class BTFrogDelayAfter : BTDelayAfter
+{
+    public override void Init(BTContext context)
+    {
+        context.SetVariable("delay", 0.125f + (Random.value / 10));
+
+        base.Init(context);
     }
 }

@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class FireballPiece : Piece
 {
     public FireballPiece()
     {
-        m_ID = 2;
+        m_ID = 3;
     }
 
     public override void Spawn(Vector2 pos, string name = "")
@@ -20,45 +21,38 @@ public class FireballPiece : Piece
     {
         throw new System.NotImplementedException();
     }
-
-    public void SetFireballFirstMoveContext(BTContext context)
-    {
-        Vector3 firstMove = Random.onUnitSphere;
-        Vector3 direction;
-
-        while (firstMove.z >= 0.8 || firstMove.y >= 0.85f || firstMove.x >= 0.85f)  // make sure we're not completely in one direction
-        {
-            firstMove = Random.onUnitSphere;
-        }
-        direction = (firstMove - Position).normalized;
-
-        firstMove = Position.BoardIntersection(direction);
-        context.SetVariable("end", firstMove);
-        context.SetVariable("direction", direction);
-    }
 }
 
 public class BTFireballMoveLeaf : BTMoveLeaf
 {
+    private Vector3 direction = Vector3.zero;
+
+    public override void Init(BTContext context)
+    {
+        if (direction == Vector3.zero)
+        {
+            FireballFirstMove(context);
+        }
+        else
+        {
+            FireballReflect(context);
+        }
+
+        base.Init(context);
+    }
+
     public override BTStatus Tick(BTContext context)
     {
         BTStatus Tick = base.Tick(context);
-        // do animation
+        
+        // animations, ect
+
         return Tick;
     }
-}
 
-public class BTFireballReflectLeaf : BTLeaf
-{
-    Vector3 endPosition;
-    Vector3 direction;
-
-    public override BTStatus Tick(BTContext context)
+    private void FireballReflect(BTContext context)
     {
-        endPosition = (Vector3)context.GetVariable("end");
-        direction = (Vector3)context.GetVariable("direction");
-
-        if (endPosition.y < Boundary.Top && endPosition.y > Boundary.Bottom)
+        if (end.y < Boundary.Top && end.y > Boundary.Bottom)
         {
             // do reflect over y = 0
             direction.x *= -1;
@@ -69,9 +63,29 @@ public class BTFireballReflectLeaf : BTLeaf
             direction.y *= -1;
         }
 
-        endPosition = endPosition.BoardIntersection(direction);
-        context.SetVariable("end", endPosition);
+        // add a little randomness to the direction (if moving in straight line as in y near 0, dont push over axis lines)
+        float RandomnessX = Random.Range(0f, Mathf.Lerp(0f, 0.075f, Mathf.Abs(direction.x)));
+        float RandomnessY = Random.Range(0f, Mathf.Lerp(0f, 0.075f, Mathf.Abs(direction.y)));
 
-        return BTStatus.Success;
+        direction.x += RandomnessX;
+        direction.y += RandomnessY;
+
+        end = end.BoardIntersection(direction);
+        context.SetVariable("end", end);
+    }
+
+    private void FireballFirstMove(BTContext context)
+    {
+        piece = (Piece)context.GetVariable("piece");
+        direction = Random.insideUnitCircle;
+
+        while (Mathf.Abs(direction.x) >= 0.95f || Mathf.Abs(direction.y) >= 0.95f)  // make sure we're not completely in one direction
+        {
+            direction = Random.insideUnitCircle;
+        }
+
+        Vector3 endPosition = piece.Position.BoardIntersection(direction);
+        context.SetVariable("end", endPosition);
+        context.SetVariable("speed", 6f);
     }
 }

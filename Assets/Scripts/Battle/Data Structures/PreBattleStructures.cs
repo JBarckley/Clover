@@ -160,9 +160,10 @@ public static class VectorExtension
         float IntersectionX;
         float IntersectionY;
         float IntersectionLine;
+        float Slope;
         Vector3 Intersection;
 
-        if (vec.x > 0)  // going towards top
+        if (direction.y > 0)  // going towards top
         {
             IntersectionLine = Boundary.Top;
         }
@@ -171,8 +172,9 @@ public static class VectorExtension
             IntersectionLine = Boundary.Bottom;
         }
 
-        IntersectionY = (IntersectionLine - vec.y) / direction.y;
-        IntersectionX = (vec.x + (direction.x * IntersectionY)) / IntersectionLine;
+        Slope = direction.y / direction.x;
+        IntersectionY = IntersectionLine;   // y = +-5.6 is a horizontal straight line boundary of the top/bottom of the board
+        IntersectionX = (IntersectionY - vec.y + (Slope * vec.x)) / Slope;
         Intersection = new Vector3(IntersectionX, IntersectionY, 0f);
 
         if (Intersection.WithinBoardBoundary() == Intersection)
@@ -181,7 +183,7 @@ public static class VectorExtension
         }
         else    // intersection is going towards a side
         {
-            if (vec.y > 0)
+            if (direction.x > 0)
             {
                 IntersectionLine = Boundary.Right;
             }
@@ -190,8 +192,8 @@ public static class VectorExtension
                 IntersectionLine = Boundary.Left;
             }
 
-            IntersectionX = (IntersectionLine - vec.x) / direction.x;
-            IntersectionY = (vec.y + (direction.y * IntersectionY)) / IntersectionLine;
+            IntersectionX = IntersectionLine;   // x = -25 +- 5.6 is a vertical horizontal line boundary of the sides of the board
+            IntersectionY = vec.y + (Slope * (IntersectionX - vec.x));
 
             Intersection = new Vector3(IntersectionX, IntersectionY, 0f);
             return Intersection;

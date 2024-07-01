@@ -1,9 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<BTContextSetter context="SetFireballFirstMoveContext">
-	<BTRepeater>
-			<BTSequence>
-				<BTFireballMoveLeaf />
-				<BTFireballReflectLeaf />
-			</BTSequence>
-	</BTRepeater>
-</BTContextSetter>
+<BTRepeater>
+	<BTFireballMoveLeaf />
+</BTRepeater>
