@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Xml.Resolvers;
 using Unity.VisualScripting;
@@ -10,8 +11,7 @@ using UnityEngine;
 // board dynamically updated with the flow of battle
 public static class BattleBoard
 {
-    private static Dictionary<string, List<Piece>> Board;
-    private static List<Piece> PlayerBoard = new List<Piece>();
+    private static Dictionary<string, List<Piece>> Board = new Dictionary<string, List<Piece>>();
 
     public static void Create(GameBoard GameBoard)
     {
@@ -86,7 +86,7 @@ public static class BattleBoard
     {
         public class KNNList
         {
-            public Dictionary<string, List<Piece>> KNN;
+            public Dictionary<string, List<Piece>> KNN = new Dictionary<string, List<Piece>>();
 
             public List<Piece> PlayerPieces { 
                 get
@@ -101,7 +101,6 @@ public static class BattleBoard
                     return KNN["enemy"];
                 } 
             }
-
             public KNNList()
             {
                 KNN.Add("player", new List<Piece>());
@@ -127,13 +126,15 @@ public static class BattleBoard
             NearestNeighbors.Clear();
             List<Piece> nn = new List<Piece>();
             KNNList _kNNList = new KNNList();
-            if (k > Board.Count + 1) throw new IndexOutOfRangeException("Attempted to find more nearest neighbors than pieces exist");
+
             foreach (List<Piece> side in Board.Values)
             {
+                if (k > side.Count + 1) k = side.Count + 1;
                 foreach (Piece a in side)
                 {
                     Piece FurthestNearNeighbor = null;
-                    foreach (string perspective in new List<string>{ "player", "enemy" }){
+                    foreach (string perspective in new List<string>{ "player", "enemy" })
+                    {
                         foreach (Piece b in Board[perspective])
                         {
                             if (a == b) continue;
@@ -162,12 +163,135 @@ public static class BattleBoard
                                 FurthestNearNeighbor = null;
                             }
                         }
-                        _kNNList.KNN[perspective] = nn;
+                        _kNNList.KNN[perspective] = new List<Piece>(nn);
+                        nn.Clear();
                     }
                     NearestNeighbors.Add(a, _kNNList);
-                    nn.Clear();
                 }
             }
         }
+    }
+
+    /*
+    public class GridBoard
+    {
+        private static int GridBoxes = 8;
+
+        public Dictionary<string, List<List<Piece>> Board = new Dictionary<string, List<List<Piece>>>
+        {
+            ["player"] = new List<List<Piece>>(),
+            ["enemy"] = new List<List<Piece>>()
+        };
+
+        public void Init()
+        {
+            foreach (string perspective in new List<string>{ "player", "enemy" } )
+            {
+                for (int i = 0; i < GridBoxes; i++)
+                {
+                    Board[perspective].Add(new List<Piece>());      // each Board[perspective] will be a GridBoxes long list of lists (whose max capacity should be GridBoxes). This will run 
+                }
+            }
+        }
+    }
+    */
+
+    public class Quadtree
+    {
+
+    }
+
+    public abstract class QuadNode
+    {
+        public abstract void Insert(Piece piece);
+    }
+
+    public class QuadLeaf : QuadNode
+    {
+        public Piece first;
+        public Piece second;
+
+        public QuadLeaf(Piece new_data)
+        {
+            data.Add(new_data);
+        }
+
+        public QuadLeaf(List<Piece> data)
+        {
+            this.data = data;
+        }
+
+        public override void Insert(Piece piece)
+        {
+            if (first == null)
+            {
+                first = piece;
+            }
+            else if (second == null)
+            {
+                second = piece;
+            }
+            else
+            {
+                // create new QuadBranch
+            }
+        }
+    }
+
+    public class QuadBranch : QuadNode
+    {
+        private QuadNode One, Two, Three, Four; // using mathematical graph quadrants (counter-clockwise starting top right)
+        private QuadBoundary Boundary;
+
+        public QuadBranch(QuadLeaf one, QuadLeaf two, QuadLeaf three, QuadLeaf four, QuadBoundary boundary)
+        {
+            One = one;
+            Two = two;
+            Three = three;
+            Four = four;
+
+            Boundary = boundary;
+        }
+
+        public QuadBranch(Piece first, Piece second, QuadBoundary boundary)
+        {
+            // partition first and second relative to boundary 
+
+            Boundary = boundary;
+            Partition(first);
+            Partition(second);
+        }
+
+        public override void Insert(Piece piece)
+        {
+            if (piece.Position.y > Boundary.horizontal)
+            {
+                if (piece.Position.x > Boundary.vertical)
+                {
+                    One.Insert(piece);
+                }
+                else
+                {
+                    Two.Insert(piece);
+                }
+            }
+            else
+            {
+                if (piece.Position.x < Boundary.vertical)
+                {
+                    Three.Insert(piece);
+                }
+                else
+                {
+                    Four.Insert(piece);
+                }
+            }
+        }
+    }
+
+    public struct QuadBoundary
+    {
+        public float horizontal;
+        public float vertical;
     }
 }

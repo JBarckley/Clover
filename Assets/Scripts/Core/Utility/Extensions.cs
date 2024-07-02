@@ -6,5 +6,11 @@ using UnityEngine;
 
 public static class Extensions
 {
-    // extensions
+    public static void Print<T>(this List<T> list)
+    {
+        foreach (T item in list)
+        {
+            Debug.Log(item);
+        }
+    }
 }

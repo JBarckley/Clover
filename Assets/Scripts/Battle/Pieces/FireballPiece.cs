@@ -44,8 +44,11 @@ public class BTFireballMoveLeaf : BTMoveLeaf
     public override BTStatus Tick(BTContext context)
     {
         BTStatus Tick = base.Tick(context);
-        
+
         // animations, ect
+
+        Debug.Log(piece.Name + "'s k-nn: ");
+        BattleBoard.KNN.NearestNeighbors[piece].PlayerPieces.Print();
 
         return Tick;
     }

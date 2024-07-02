@@ -17,6 +17,7 @@ public class BattleMaster : MonoSingleton<BattleMaster>
     {
         if (GamePhase.Current == Phase.Battle)
         {
+            BattleBoard.KNN.FindKNN(8);
             BattleControl.Update();
         }
     }
@@ -70,7 +71,7 @@ public class BattleMaster : MonoSingleton<BattleMaster>
         GameCamera.Teleport(GetPosition2());
         boardInstance = (GameObject) Instantiate(Resources.Load("World/Board"), GetPosition3(), Quaternion.identity);
         PieceLayout PlayerPieces = MaximalPlayer;
-        PieceLayout OpponentPieces = OneFireball;
+        PieceLayout OpponentPieces = FullFireball;
         Board = new GameBoard(PlayerPieces, OpponentPieces);
         BattleControl.SpawnPieces(Board, boardInstance.transform.position);
         Board.Print();
