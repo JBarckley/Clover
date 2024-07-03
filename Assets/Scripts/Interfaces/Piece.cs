@@ -7,6 +7,22 @@ using Object = UnityEngine.Object;
 
 public abstract class Piece
 {
+    protected byte m_ID;
+
+    public GameObject Instance { get; protected set; }
+    public Vector3 Position;
+
+    public BTree m_Behavior = null;
+    public TimerInstance Timer = new TimerInstance();
+
+    public PieceName Name
+    {
+        get
+        {
+            return (PieceName)m_ID;
+        }
+    }
+
     protected Piece()
     {
         m_ID = 255;
@@ -41,25 +57,12 @@ public abstract class Piece
         return ((PieceName)m_ID).ToString();
     }
 
-    public static implicit operator Vector3(Piece p) => p.Position;
-
-    protected byte m_ID;
-
-    public GameObject Instance { get; protected set; }
-    public Vector3 Position;
-
-    public BTree m_Behavior = null;
-    public TimerInstance Timer = new TimerInstance();
-
-    // static battleboard such that all pieces reference the same memory!!!! -- done
-
-    public PieceName Name 
-    { 
-        get
-        {
-            return (PieceName)m_ID;
-        }
+    public List<Piece> KNN(int k, string perspective)
+    {
+        return BattleBoard.K_Nearest(this, k, perspective);
     }
+
+    public static implicit operator Vector3(Piece p) => p.Position;
 }
 
 public enum PieceName
@@ -68,4 +71,22 @@ public enum PieceName
     Frog,
     Crate,
     Fireball
+}
+
+public class PieceCompare : IComparer<Piece>
+{
+    public Piece reference;
+
+    public PieceCompare(Piece referencePoint)
+    {
+        reference = referencePoint;
+    }
+
+    public int Compare(Piece left, Piece right)
+    {
+        float a = (left.Position - reference.Position).magnitude;
+        float b = (right.Position - reference.Position).magnitude;
+
+        return a.CompareTo(b);
+    }
 }

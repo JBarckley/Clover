@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Xml.Resolvers;
@@ -82,6 +83,14 @@ public static class BattleBoard
      *      
      */
 
+    public static List<Piece> K_Nearest(Piece p, int k, string perspective)
+    {
+        Board[perspective].Sort(new PieceCompare(p));
+        return Board[perspective].GetRange(0, k);
+    }
+}
+
+    /*
     public static class KNN
     {
         public class KNNList
@@ -133,7 +142,7 @@ public static class BattleBoard
                 foreach (Piece a in side)
                 {
                     Piece FurthestNearNeighbor = null;
-                    foreach (string perspective in new List<string>{ "player", "enemy" })
+                    foreach (string perspective in Board.Keys)
                     {
                         foreach (Piece b in Board[perspective])
                         {
@@ -171,39 +180,28 @@ public static class BattleBoard
             }
         }
     }
-
-    /*
-    public class GridBoard
+    
+    public class QuadTree
     {
-        private static int GridBoxes = 8;
+        QuadBranch root = new QuadBranch();
 
-        public Dictionary<string, List<List<Piece>> Board = new Dictionary<string, List<List<Piece>>>
+        public void Create(List<Piece> PieceBoard)
         {
-            ["player"] = new List<List<Piece>>(),
-            ["enemy"] = new List<List<Piece>>()
-        };
-
-        public void Init()
-        {
-            foreach (string perspective in new List<string>{ "player", "enemy" } )
+            foreach (Piece piece in PieceBoard)
             {
-                for (int i = 0; i < GridBoxes; i++)
-                {
-                    Board[perspective].Add(new List<Piece>());      // each Board[perspective] will be a GridBoxes long list of lists (whose max capacity should be GridBoxes). This will run 
-                }
+                root.Insert(piece);
             }
         }
-    }
-    */
-
-    public class Quadtree
-    {
-
     }
 
     public abstract class QuadNode
     {
-        public abstract void Insert(Piece piece);
+        public int quadrant;
+        public QuadBranch parent;
+
+        public abstract bool Insert(Piece piece);
+
+        //public abstract List<Piece> kNearestNeighbors(Piece target, Dictionary<QuadNode, List<Piece>> soln);
     }
 
     public class QuadLeaf : QuadNode
@@ -211,87 +209,153 @@ public static class BattleBoard
         public Piece first;
         public Piece second;
 
-        public QuadLeaf(Piece new_data)
+        public QuadLeaf(QuadBranch parent, int quadrant)
         {
-            data.Add(new_data);
+            this.parent = parent;
+            this.quadrant = quadrant;
         }
 
-        public QuadLeaf(List<Piece> data)
-        {
-            this.data = data;
-        }
-
-        public override void Insert(Piece piece)
+        public override bool Insert(Piece piece)
         {
             if (first == null)
             {
                 first = piece;
+                return true;
             }
             else if (second == null)
             {
                 second = piece;
+                return true;
             }
             else
             {
-                // create new QuadBranch
+                return false;
             }
+        }
+
+        /*
+        public override List<Piece> kNearestNeighbors(Piece target, List<Piece> soln = null, float closestNeighbor = float.PositiveInfinity)
+        {
+            return new List<Piece>();
         }
     }
 
     public class QuadBranch : QuadNode
     {
-        private QuadNode One, Two, Three, Four; // using mathematical graph quadrants (counter-clockwise starting top right)
-        private QuadBoundary Boundary;
+        public QuadNode[] children = new QuadNode[4]; // using mathematical graph quadrants (counter-clockwise starting top right)
+        public QuadBoundary GridBoundary;
 
-        public QuadBranch(QuadLeaf one, QuadLeaf two, QuadLeaf three, QuadLeaf four, QuadBoundary boundary)
+        public QuadBranch()
         {
-            One = one;
-            Two = two;
-            Three = three;
-            Four = four;
-
-            Boundary = boundary;
+            GridBoundary = new QuadBoundary(new Vector2(Boundary.Left, Boundary.Top), new Vector2(Boundary.Right, Boundary.Bottom));
         }
 
-        public QuadBranch(Piece first, Piece second, QuadBoundary boundary)
+        public QuadBranch(QuadLeaf current, Piece piece, QuadBoundary boundary)
         {
-            // partition first and second relative to boundary 
-
-            Boundary = boundary;
-            Partition(first);
-            Partition(second);
+            GridBoundary = boundary;
+            Insert(current.first);
+            Insert(current.second);
+            Insert(piece);
         }
 
-        public override void Insert(Piece piece)
+        // we do partitioning here!
+        public override bool Insert(Piece piece)
         {
-            if (piece.Position.y > Boundary.horizontal)
+            byte quadrant;
+
+            if (piece.Position.y > GridBoundary.MidPointY)
             {
-                if (piece.Position.x > Boundary.vertical)
+                if (piece.Position.x > GridBoundary.MidPointX)
                 {
-                    One.Insert(piece);
+                    quadrant = 0;
                 }
                 else
                 {
-                    Two.Insert(piece);
+                    quadrant = 1;
                 }
             }
             else
             {
-                if (piece.Position.x < Boundary.vertical)
+                if (piece.Position.x < GridBoundary.MidPointX)
                 {
-                    Three.Insert(piece);
+                    quadrant = 2;
                 }
                 else
                 {
-                    Four.Insert(piece);
+                    quadrant = 3;
                 }
             }
+
+            // only create memory of quadleaf if it's being used
+            children[quadrant] ??= new QuadLeaf(this, quadrant);
+
+            if (!children[quadrant].Insert(piece))      // a leaf is being inserted into and it is already occupied by two pieces; formally, we know Insert(Piece) can only return false for the QuadLeaf definition, thus the cast must always be valid.
+            {
+                QuadBoundary new_boundary = new QuadBoundary(GridBoundary, quadrant);
+                children[quadrant] = new QuadBranch((QuadLeaf)children[quadrant], piece, new_boundary);
+                children[quadrant].parent = this;
+                children[quadrant].quadrant = quadrant;
+            }
+
+            return true;
         }
     }
 
+
+    /// <summary>
+    /// A QuadBoundary is canonically defined by two points at diagonally opposite edges which define a square which is split in the exact center horizontally and vertically into each leaf.
+    /// </summary>
     public struct QuadBoundary
     {
-        public float horizontal;
-        public float vertical;
+        public Vector2 TopLeft;
+        public Vector2 BottomRight;
+
+        public float MidPointY;
+        public float MidPointX;
+
+        public QuadBoundary(Vector2 tl, Vector2 br)
+        {
+            TopLeft = tl;
+            BottomRight = br;
+
+            MidPointY = (TopLeft.y + BottomRight.y) / 2;
+            MidPointX = (TopLeft.x + BottomRight.x) / 2;
+        }
+
+        public QuadBoundary(QuadBoundary old)
+        {
+            TopLeft = old.TopLeft;
+            BottomRight = old.BottomRight;
+
+            MidPointY = old.MidPointY;
+            MidPointX = old.MidPointX;
+        }
+
+        public QuadBoundary(QuadBoundary old, byte quadrant) : this(old)
+        {
+            if (quadrant == 0)
+            {
+                TopLeft.Set(MidPointX, TopLeft.y);
+                BottomRight.Set(BottomRight.x, MidPointY);
+            }
+            else if (quadrant == 1)
+            {
+                // TopLeft = TopLeft
+                BottomRight.Set(MidPointX, MidPointY);
+            }
+            else if (quadrant == 2)
+            {
+                TopLeft.Set(TopLeft.x, MidPointY);
+                BottomRight.Set(MidPointX, BottomRight.y);
+            }
+            else
+            {
+                TopLeft.Set(MidPointX, MidPointY);
+                // BottomRight = BottomRight
+            }
+
+            MidPointY = (TopLeft.y + BottomRight.y) / 2;
+            MidPointX = (TopLeft.x + BottomRight.x) / 2;
+        }
     }
-}
+    */ 

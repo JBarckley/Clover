@@ -47,8 +47,8 @@ public class BTFireballMoveLeaf : BTMoveLeaf
 
         // animations, ect
 
-        Debug.Log(piece.Name + "'s k-nn: ");
-        BattleBoard.KNN.NearestNeighbors[piece].PlayerPieces.Print();
+        //List<Piece> test = BattleBoard.KNN.NearestNeighbors[piece].PlayerPieces;
+        piece.KNN(8, "player");
 
         return Tick;
     }

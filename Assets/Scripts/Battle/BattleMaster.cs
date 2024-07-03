@@ -17,7 +17,7 @@ public class BattleMaster : MonoSingleton<BattleMaster>
     {
         if (GamePhase.Current == Phase.Battle)
         {
-            BattleBoard.KNN.FindKNN(8);
+            //BattleBoard.KNN.FindKNN(8);
             BattleControl.Update();
         }
     }
