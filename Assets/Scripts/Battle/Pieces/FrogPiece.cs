@@ -44,7 +44,18 @@ public class BTFrogMoveLeaf : BTMoveLeaf
     {
         piece = (Piece)context.GetVariable("piece");
 
-        context.SetVariable("end", (piece.Position + (Vector3)Random.insideUnitCircle * 2).WithinBoardBoundary());
+        Piece nearestEnemy = piece.KNN(1, "enemy")?[0];
+        if (nearestEnemy != null)
+        {
+            float randomMove = Random.Range(2f, 4f);
+            Vector3 endPosition = Vector3.Lerp(piece.Position, nearestEnemy.Position, Mathf.Min(randomMove / (nearestEnemy.Position - piece.Position).magnitude, 1f));
+            context.SetVariable("end", endPosition);
+        }
+        else
+        {
+            context.SetVariable("end", (piece.Position + (Vector3)Random.insideUnitCircle * 2).WithinBoardBoundary());
+        }
+
         context.SetVariable("speed", 3.5f);
 
         base.Init(context);

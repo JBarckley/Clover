@@ -1,3 +1,4 @@
+using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -11,7 +12,14 @@ public class BattleMaster : MonoSingleton<BattleMaster>
     private static GameObject boardInstance;
     public GameBoard Board;
 
+    private AstarPath Pathfinder;
+
     private Camera cam;
+
+    private void Start()
+    {
+        Pathfinder = AstarPath.active;
+    }
 
     void Update()
     {
@@ -75,6 +83,14 @@ public class BattleMaster : MonoSingleton<BattleMaster>
         Board = new GameBoard(PlayerPieces, OpponentPieces);
         BattleControl.SpawnPieces(Board, boardInstance.transform.position);
         Board.Print();
+
+        GridGraph gg = Pathfinder.data.AddGraph(typeof(GridGraph)) as GridGraph;
+        gg.is2D = true;
+        gg.collision.use2D = true;
+        gg.center = boardInstance.transform.position;
+        gg.SetDimensions(33, 33, 0.337f);
+        Pathfinder.Scan();
+
     }
 
     public void StartBattle(InputAction.CallbackContext context)
@@ -82,6 +98,7 @@ public class BattleMaster : MonoSingleton<BattleMaster>
         if (GamePhase.Current == Phase.PreBattle)
         {
             Debug.Log("Starting Battle!");
+
             GamePhase.Current = Phase.Battle;
             BattleBoard.Create(Board);
         }

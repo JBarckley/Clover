@@ -11,6 +11,28 @@
 	- Starting researching UI related to drawing and styling health bars of pieces during battle		---> I'll do this later. For now I'd rather use an internal HP float and iterate on combat/targeting first
 	- Generalize the Move Leaf?
 
+7/3 DOCKET:
+
+	- Put MoveLeaf end logic updates per tick such that you can track a moving piece. (Or make FrogMoveLeaf?)
+	- Think about AABB or some other collision system. Look into Unity rigidbodies. I don't love pieces stacking up, especially when two of the same type of piece get into the same behavior chain.
+	- Implement attacking & HP. For the frog, maybe create a HitBox that follows its position when it moves? Alternatively, create a HitBox at it's position when it finishes a move for 0.2 seconds.
+	- The next frontier is implementing a simple ground unit, and using A* pathfinding and a Unity grid object to create intelligent movement around other pieces.
+
+	- I think I'm going ahead with the A* project. I don't like how I'm using code I couldn't implement myself, but it's such a crucial system that I need a very performant implementation.
+	- For how I implement A* project:
+		- Does Fireball use the system? It doesn't use "pathfinding" so I could continue to use the straight lines, but it might look weird movement wise compared to the type of movement that the other pieces have. Have to see.
+		- How does the Frog use discrete pathfinding? I'm thinking I change the "find path circle"'s radius to a relatively large number with a little randomness, then the frog moves and waits with the current behavior tree.
+			- I'll need to use the DestinationSetter with a dynamic destination so the frog can "jump" to a moving target. However, if the frog is in the middle of a path a la the previous implementation I'm not sure if it can pivot from the current movement.
+		- When a piece moves, use local recalulation of the A* pathfinding to limit performance costs. (iterate here, there's likely many optimizations)
+		- To that end, cache the starting board's grid and load it on battle start to get rid of the ~7ms cost there.
+		- I need to put a rigidbody on my collidable pieces so A* can path around them.
+
+
+
+Notes about 6/30-7/2
+	- K-Nearest Neighbors problem is very difficult, but I don't need a ultra-efficient solution because my data set is so small.
+	- Quadtrees and Grid partitions run into the same problem: for any n depth check, there is no guarantee that the nearest neighbor will be within n - 1 depth. This recurses, so for any n - 1 depth check, there is no guarantee that the nearest neighbor is within n - 2 depth.
+		So, frankly, I don't understand the missing piece that creates the interest with these.
 
 
 

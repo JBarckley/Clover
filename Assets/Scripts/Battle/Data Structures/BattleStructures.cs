@@ -85,7 +85,13 @@ public static class BattleBoard
 
     public static List<Piece> K_Nearest(Piece p, int k, string perspective)
     {
+        if (!Board.ContainsKey(perspective)) return null;
         Board[perspective].Sort(new PieceCompare(p));
+        if (Board[perspective].Count < k)
+        {
+            Debug.Log("Trying to find more near neighbors than possible");
+            k = Board[perspective].Count;
+        }
         return Board[perspective].GetRange(0, k);
     }
 }

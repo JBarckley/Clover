@@ -59,6 +59,7 @@ public abstract class Piece
 
     public List<Piece> KNN(int k, string perspective)
     {
+        if (k < 0) throw new Exception("Trying to find negative near neighbors");
         return BattleBoard.K_Nearest(this, k, perspective);
     }
 

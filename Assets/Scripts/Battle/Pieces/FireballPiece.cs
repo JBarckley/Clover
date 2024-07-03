@@ -89,6 +89,6 @@ public class BTFireballMoveLeaf : BTMoveLeaf
 
         Vector3 endPosition = piece.Position.BoardIntersection(direction);
         context.SetVariable("end", endPosition);
-        context.SetVariable("speed", 6f);
+        context.SetVariable("speed", 3f);
     }
 }
