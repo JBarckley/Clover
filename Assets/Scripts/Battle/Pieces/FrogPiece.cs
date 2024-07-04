@@ -1,3 +1,4 @@
+using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -9,6 +10,8 @@ using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class FrogPiece : Piece
 {
+    public AIPath ap;
+
     public FrogPiece()
     {
         m_ID = 1;
@@ -18,7 +21,24 @@ public class FrogPiece : Piece
     {
         base.Spawn(pos, "Frog");
 
-        m_Behavior = new BTree("Assets/Resources/Pieces/Frog/Frog.xml", this);
+        //m_Behavior = new BTree("Assets/Resources/Pieces/Frog/Frog.xml", this);
+
+        dgo = Instance.AddComponent<DynamicGridObstacle>();
+        dgo.updateError = 0.05f;
+        dgo.checkTime = 0.1f;
+
+        ap = Instance.AddComponent<AIPath>();
+        ap.autoRepath.maximumInterval = 0.03f;
+        ap.pickNextWaypointDist = 0.1f;
+        ap.radius = 1.25f;
+        ap.maxSpeed = 4f;
+        ap.gravity = new Vector3(0, 0, 0);
+        ap.updateRotation = false;
+        ap.orientation = OrientationMode.YAxisForward;
+        ap.whenCloseToDestination = CloseToDestinationMode.ContinueToExactDestination;
+        ap.destination = new Vector3(Instance.transform.position.x, Boundary.Top, 0);
+        ap.canMove = true;
+        ap.enabled = false;
     }
 
     public override void Remove()

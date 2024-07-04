@@ -1,3 +1,4 @@
+using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.UIElements;
 
 public class FireballPiece : Piece
 {
+    public AIPath ap;
+
     public FireballPiece()
     {
         m_ID = 3;
@@ -14,7 +17,24 @@ public class FireballPiece : Piece
     {
         base.Spawn(pos, "Fireball");
 
-        m_Behavior = new BTree("Assets/Resources/Pieces/Fireball/Fireball.xml", this);
+        //m_Behavior = new BTree("Assets/Resources/Pieces/Fireball/Fireball.xml", this);
+
+        //dgo = Instance.AddComponent<DynamicGridObstacle>();
+        //dgo.updateError = 0.05f;
+        //dgo.checkTime = 0.1f;
+
+        ap = Instance.AddComponent<AIPath>();
+        ap.autoRepath.maximumInterval = 0.03f;
+        ap.pickNextWaypointDist = 0.1f;
+        ap.radius = 0.5f;
+        ap.maxSpeed = 4f;
+        ap.gravity = new Vector3(0, 0, 0);
+        ap.updateRotation = false;
+        ap.orientation = OrientationMode.YAxisForward;
+        ap.whenCloseToDestination = CloseToDestinationMode.ContinueToExactDestination;
+        ap.destination = new Vector3(Instance.transform.position.x, Boundary.Bottom + 0.5f, 0);
+        ap.canMove = true;
+        ap.enabled = false;
     }
 
     public override void Remove()
@@ -25,6 +45,8 @@ public class FireballPiece : Piece
 
 public class BTFireballMoveLeaf : BTMoveLeaf
 {
+    private byte PerGridUpdate;
+
     private Vector3 direction = Vector3.zero;
 
     public override void Init(BTContext context)
@@ -48,7 +70,7 @@ public class BTFireballMoveLeaf : BTMoveLeaf
         // animations, ect
 
         //List<Piece> test = BattleBoard.KNN.NearestNeighbors[piece].PlayerPieces;
-        piece.KNN(8, "player");
+        //piece.KNN(8, "player");
 
         return Tick;
     }

@@ -84,12 +84,16 @@ public class BattleMaster : MonoSingleton<BattleMaster>
         BattleControl.SpawnPieces(Board, boardInstance.transform.position);
         Board.Print();
 
+        /*
         GridGraph gg = Pathfinder.data.AddGraph(typeof(GridGraph)) as GridGraph;
         gg.is2D = true;
         gg.collision.use2D = true;
         gg.center = boardInstance.transform.position;
         gg.SetDimensions(33, 33, 0.337f);
         Pathfinder.Scan();
+        */
+
+        GridGraph gg = Pathfinder.data.gridGraph;
 
     }
 
@@ -101,6 +105,7 @@ public class BattleMaster : MonoSingleton<BattleMaster>
 
             GamePhase.Current = Phase.Battle;
             BattleBoard.Create(Board);
+            BattleBoard.EnableFrogAI();
         }
     }
 }

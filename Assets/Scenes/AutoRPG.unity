@@ -308,11 +308,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   data:
-    dataString: UEsDBBQAAAgIAACAn+t/1eK+WQIAABQFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFlVMty4jAQ/BVK582WDeTB3nYdQvZAoEK2cvFFWGOsQpZcevBK8e87km1syAnR0zPq6Rn5i3BpKsis0jPN2VwxIL8GxJ/Jj0EXfIUD3Si54idoOZ+c2cKTaOC8U8sV4rFPM6oEq3n2W26EJ0cIOslzpcsp20CijDUI51QYwJBW1mdLhL4G5IA/dxOfcsTT8NGfTniaRIMzHjOQFnSPOrxvqC2x5jmZCVpWwLzojh63heOaJrGdhhH9HPn6SghuGjXEHqvQbUIr47AXJDBOsbsgwTdbAN8U1ivtJy/y3IBtRGl6fOYaTaqrkj+qdq6kZlsr21Hh4CK9Ljn/Fr2LQzjXqnxtb40jf4MteLZ9p8eMGtsztg8/X8t2ck/Flq4FfBYg39RMKycZBq12PtUZGD53fy+NJQVk2w6vpd6Arur8jr4P5xxaPySCl+tg+7gGVkIFs8PsQeNg/qLesBmmqYCoF/HPwAfd9FeoCbxwbSyGmialV7dWTnsqmQbLfDPOJkpLCHCjuQJJhT0usYy9nd9NrHftTeSF+sfSXN7E2jdwkxLgjh9FN6Gl2l9mZQq1n4MpFs4KLqET7QNv6FOipKzXq+9Jm7ZyOqdZL23jOLveLBLfPw5HOZvcj5/i8Zjmd+v1hD3A5CkeDenDQzwiYfW4xD6pWNZCG3twan1PJO5Z+xEZzDStwq4zTfczfipVz3Muc7XKNIBcXJcwoPEWfJVsyjg6tAJruQwDJ18pESrbAksvhdLQ6vRgNU27Kimp+E5Zj6QkCV+NlHj4sstLDTsOe395W+xMzv8BUEsDBBQAAAgIAACAn+uKkWlmbQAAAHgAAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jM011FQSi9KLMgoBooYgjilmSkgdrSSoam5kXFaiqWpiYWhiUlimm5SkmWKWaqlhaGxUaKZmaGxUixQfUllQapfYm4qRE9AYklGWmZeSmZeup57UWaKO8hopdhaAFBLAQItABQAAAgIAACAn+t/1eK+WQIAABQFAAALACQAAAAAAAAAAAAAAAAAAABncmFwaDAuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLAQItABQAAAgIAACAn+uKkWlmbQAAAHgAAAAJACQAAAAAAAAAAAAAAKYCAABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwUGAAAAAAIAAgC4AAAAXgMAAAAA
+    dataString: UEsDBBQAAAgIAACAn+uiNXIUNQAAAD4AAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jM011FQSi9KLMgoBooYgDilmSkgdnQskFNSWZDql5ibChGoBQBQSwECLQAUAAAICAAAgJ/rojVyFDUAAAA+AAAACQAkAAAAAAAAAAAAAAAAAAAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAABAAEAWwAAAIAAAAAAAA==
     upgradeData: 
-    file_cachedStartup: {fileID: 0}
+    file_cachedStartup: {fileID: 4900000, guid: fa744ba5267e20c48a83d8f9b08e5879, type: 3}
     data_cachedStartup: 
-    cacheStartup: 0
+    cacheStartup: 1
   showNavGraphs: 1
   showUnwalkableNodes: 1
   debugMode: 0
@@ -336,7 +336,39 @@ MonoBehaviour:
     _MeshEdgeColor: {r: 0, g: 0, b: 0, a: 0.5}
     _AreaColors:
     - {r: 0, g: 0, b: 0, a: 0}
-  tagNames: []
+  tagNames:
+  - Basic Ground
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+  - 18
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+  - 27
+  - 28
+  - 29
+  - 30
+  - 31
   heuristic: 2
   heuristicScale: 1
   threadCount: -2
@@ -566,7 +598,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Frog
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1377848816342036146, guid: 30051bcd22a3d414ea3a304cd892c6d5, type: 3}
+    - {fileID: 5035084701160872982, guid: 30051bcd22a3d414ea3a304cd892c6d5, type: 3}
+    - {fileID: 3802226307151259949, guid: 30051bcd22a3d414ea3a304cd892c6d5, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

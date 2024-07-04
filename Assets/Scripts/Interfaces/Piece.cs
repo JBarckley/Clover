@@ -1,3 +1,4 @@
+using Pathfinding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ public abstract class Piece
 
     public BTree m_Behavior = null;
     public TimerInstance Timer = new TimerInstance();
+
+    public DynamicGridObstacle dgo;
 
     public PieceName Name
     {
@@ -42,7 +45,7 @@ public abstract class Piece
 
     public void Update()
     {
-        m_Behavior.Tick();
+        m_Behavior?.Tick();
     }
 
     public void PhysicsUpdate()

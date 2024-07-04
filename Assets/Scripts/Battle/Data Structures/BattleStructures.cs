@@ -94,6 +94,18 @@ public static class BattleBoard
         }
         return Board[perspective].GetRange(0, k);
     }
+
+    public static void EnableFrogAI()
+    {
+        foreach (FrogPiece frog in Board["player"])
+        {
+            frog.ap.enabled = true;
+        }
+        foreach (FireballPiece fb in Board["enemy"])
+        {
+            fb.ap.enabled = true;
+        }
+    }
 }
 
     /*
