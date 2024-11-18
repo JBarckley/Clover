@@ -13,3 +13,5 @@ The starting point for this idea is:
 - Boss's boards act a little bit differently to minor enemies, where the boss has a "king" unit signified with some design element that when it dies, the boss is killed no matter the other pieces remaining a la chess.
 
 https://trello.com/b/2saHfyNh/auto-rpg
+
+https://johnb.bearblog.dev/clover/
